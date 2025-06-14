@@ -1,0 +1,21 @@
+
+> milka-gafullset@0.0.1 dev
+> astro dev
+
+17:28:24 [types] Generated 1ms
+17:28:24 [content] Syncing content
+17:28:24 [content] Synced content
+17:28:24 [vite] Re-optimizing dependencies because vite config has changed
+
+ astro  v5.9.2 ready in 428 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+17:28:24 watching for file changes...
+18:33:28 Configuration file updated. Restarting...
+18:33:29 [vite] Re-optimizing dependencies because lockfile has changed
+18:33:29 [content] Syncing content
+18:33:29 [content] Synced content
+18:33:29 [types] Generated 284ms
+18:33:29 [vite] Re-optimizing dependencies because vite config has changed

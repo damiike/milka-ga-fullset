@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Confetti, useConfetti } from '../ui/confetti';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { isTriggered, triggerConfetti } = useConfetti();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +18,9 @@ export function FloatingBookingButton() {
   }, []);
 
   const handleBookingClick = () => {
+    // Trigger confetti animation
+    triggerConfetti();
+    
     // Track conversion with GTM
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
@@ -152,6 +157,9 @@ export function FloatingBookingButton() {
           </motion.div>
         </>
       )}
+      
+      {/* Confetti Animation */}
+      <Confetti trigger={isTriggered} />
     </AnimatePresence>
   );
 }

@@ -35,19 +35,20 @@ export function LuxuryHero() {
         <Sparkles size={20} />
       </animated.div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div 
-          className="flex flex-col items-center justify-center min-h-screen text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
+      <div className="relative">
+        <div className="container mx-auto px-6 relative z-10 min-h-screen flex items-center justify-center py-16 sm:py-24">
+          <motion.div 
+            className="flex flex-col items-center justify-center w-full text-center relative"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-8"
+            className="mb-8 pt-12 sm:pt-0"
           >
             <img 
               src="https://milkacollective.com.au/wp-content/uploads/2021/07/MILKA-Transparent-Dark.png"
@@ -177,9 +178,9 @@ export function LuxuryHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.8 }}
-            className="flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground"
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground pb-6 sm:pb-0"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto px-4 sm:px-0">
               <div className="flex -space-x-1">
                 {[...Array(5)].map((_, i) => (
                   <motion.div
@@ -192,35 +193,46 @@ export function LuxuryHero() {
                   </motion.div>
                 ))}
               </div>
-              <span className="font-medium">Over 95 5-Star Google Verified Reviews</span>
+              <span className="font-medium text-center sm:text-left">Over 95 5-Star Google Verified Reviews</span>
             </div>
-            <span className="text-primary/30">•</span>
-            <span><span className="text-lg">⏰</span> Mon-Thu 10am-8pm • Fri 10am-5pm • Sat 10am-4pm</span>
-            <span className="text-primary/30">•</span>
-            <span><span className="text-lg">📍</span> 2/229 Bay St, Brighton</span>
+            <span className="hidden sm:inline text-primary/30">•</span>
+            <div className="flex flex-col sm:flex-row items-center gap-2 px-4 sm:px-0 w-full sm:w-auto">
+              <span className="text-2xl sm:text-lg">⏰</span>
+              <span className="text-center sm:text-left">
+                <span className="sm:inline">Mon-Thu 10am-8pm •</span>
+                <span className="sm:inline"> Fri 10am-5pm •</span>
+                <span className="sm:inline"> Sat 10am-4pm</span>
+              </span>
+            </div>
+            <span className="hidden sm:inline text-primary/30">•</span>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">📍</span>
+              <span>2/229 Bay St, Brighton</span>
+            </div>
+            </motion.div>
+            
+            {/* Scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+              className="absolute -bottom-8 sm:-bottom-12 left-1/2 transform -translate-x-1/2 z-10"
+            >
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center"
+              >
+                <motion.div
+                  animate={{ y: [0, 15, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="w-1 h-3 bg-primary rounded-full mt-2"
+                />
+              </motion.div>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, 15, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="w-1 h-3 bg-primary rounded-full mt-2"
-          />
-        </motion.div>
-      </motion.div>
 
       {/* Decorative blur circles */}
       <motion.div

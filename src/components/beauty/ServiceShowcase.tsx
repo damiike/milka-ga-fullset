@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Sparkles, Clock, DollarSign } from 'lucide-react';
+import { useConfetti } from '../../hooks/useConfetti';
 
 interface Service {
   category: string;
@@ -102,6 +103,7 @@ const services: Service[] = [
 export function ServiceShowcase() {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const { triggerConfetti } = useConfetti();
 
   return (
     <section className="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden">
@@ -218,6 +220,22 @@ export function ServiceShowcase() {
 
                   <motion.a
                     href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+                    onClick={() => {
+                      // Trigger confetti animation
+                      triggerConfetti();
+                      
+                      // Track booking click with GTM
+                      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+                        (window as any).dataLayer.push({
+                          event: 'booking_click',
+                          click_type: 'service_card',
+                          button_text: 'Book This Service',
+                          service_name: item.name,
+                          service_price: item.price,
+                          service_category: services[selectedCategory].category
+                        });
+                      }
+                    }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className={`block w-full py-3 rounded-full font-medium transition-all text-center ${

@@ -2,12 +2,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
 import { Sparkles, Star, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Confetti, useConfetti } from '../ui/confetti';
+import { useConfetti } from '../../hooks/useConfetti';
 
 export function LuxuryHero() {
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, [0, 500], [0, -150]);
-  const { isTriggered, triggerConfetti } = useConfetti();
+  const { triggerConfetti } = useConfetti();
   
   // Floating animation for sparkles
   const sparkleAnimation = useSpring({
@@ -248,9 +248,6 @@ export function LuxuryHero() {
         style={{ y: parallaxY }}
         className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent rounded-full filter blur-3xl opacity-20"
       />
-      
-      {/* Confetti Animation */}
-      <Confetti trigger={isTriggered} />
     </section>
   );
 }

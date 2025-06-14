@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Confetti, useConfetti } from '../ui/confetti';
+import { useConfetti } from '../../hooks/useConfetti';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const { isTriggered, triggerConfetti } = useConfetti();
+  const { triggerConfetti } = useConfetti();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,6 +138,9 @@ export function FloatingBookingButton() {
                   <a
                     href="tel:0480095789"
                     onClick={() => {
+                      // Trigger confetti animation
+                      triggerConfetti();
+                      
                       // Track phone click with GTM
                       if (typeof window !== 'undefined' && (window as any).dataLayer) {
                         (window as any).dataLayer.push({
@@ -157,9 +160,6 @@ export function FloatingBookingButton() {
           </motion.div>
         </>
       )}
-      
-      {/* Confetti Animation */}
-      <Confetti trigger={isTriggered} />
     </AnimatePresence>
   );
 }

@@ -6,6 +6,7 @@ import { LuxuryTestimonials } from '../components/beauty/LuxuryTestimonials';
 import { WhyChooseUs } from '../components/beauty/WhyChooseUs';
 import { InstagramGallery } from '../components/beauty/InstagramGallery';
 import { FloatingBookingButton } from '../components/beauty/FloatingBookingButton';
+import { FreeConsultationOffer } from '../components/beauty/FreeConsultationOffer';
 import { FAQ } from '../components/beauty/FAQ';
 import { landingConfigs } from '../data/landing-configs';
 
@@ -25,6 +26,22 @@ const variant = 'beauty';
   <ServiceShowcase client:load />
   
   <WhyChooseUs client:visible />
+  
+  <!-- Free Consultation Offer Section -->
+  <section class="py-16 bg-white relative">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">
+          New Client
+          <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400"> Special Offer</span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          We want your first experience to be perfect. That's why every new full set booking includes a complimentary consultation.
+        </p>
+      </div>
+      <FreeConsultationOffer client:visible />
+    </div>
+  </section>
   
   <LuxuryTestimonials client:visible />
   
@@ -54,6 +71,7 @@ const variant = 'beauty';
         <a
           href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
           onclick="
+            triggerConfettiFinalCTA();
             if (typeof window !== 'undefined' && window.dataLayer) {
               window.dataLayer.push({
                 event: 'booking_click',
@@ -71,6 +89,7 @@ const variant = 'beauty';
         <a
           href="tel:0480095789"
           onclick="
+            triggerConfettiFinalCTA();
             if (typeof window !== 'undefined' && window.dataLayer) {
               window.dataLayer.push({
                 event: 'phone_click',
@@ -106,3 +125,65 @@ const variant = 'beauty';
   
   <FloatingBookingButton client:load />
 </LandingLayout>
+
+<script>
+  // Load canvas-confetti dynamically and create confetti function for final CTA
+  let confettiLoaded = false;
+  let confetti;
+
+  async function loadConfetti() {
+    if (!confettiLoaded) {
+      const module = await import('canvas-confetti');
+      confetti = module.default;
+      confettiLoaded = true;
+    }
+    return confetti;
+  }
+
+  window.triggerConfettiFinalCTA = async function() {
+    const confetti = await loadConfetti();
+    
+    // Create realistic confetti effect
+    const count = 200;
+    const defaults = {
+      origin: { y: 0.7 }
+    };
+
+    function fire(particleRatio, opts) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio),
+        colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24', '#a78bfa', '#34d399', '#ffffff']
+      });
+    }
+
+    // Multiple bursts for realistic effect
+    fire(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+
+    fire(0.2, {
+      spread: 60,
+    });
+
+    fire(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8
+    });
+
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2
+    });
+
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  };
+</script>

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Instagram } from 'lucide-react';
+import { useConfetti } from '../../hooks/useConfetti';
 
 interface InstagramPost {
   id: number;
@@ -42,6 +43,7 @@ const posts: InstagramPost[] = [
 ];
 
 export function InstagramGallery() {
+  const { triggerConfetti } = useConfetti();
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
@@ -82,6 +84,21 @@ export function InstagramGallery() {
             <motion.a
               key={post.id}
               href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+              onClick={() => {
+                // Trigger confetti animation
+                triggerConfetti();
+                
+                // Track booking click with GTM
+                if (typeof window !== 'undefined' && (window as any).dataLayer) {
+                  (window as any).dataLayer.push({
+                    event: 'booking_click',
+                    click_type: 'instagram_gallery',
+                    button_text: 'Book This Look',
+                    image_caption: post.caption,
+                    image_id: post.id
+                  });
+                }
+              }}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}

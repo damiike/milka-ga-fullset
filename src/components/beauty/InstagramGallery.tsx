@@ -33,11 +33,6 @@ const posts: InstagramPost[] = [
   {
     id: 5,
     image: "/images/beauty/IMG_4940.jpg",
-    caption: "Hybrid perfection - best of both worlds"
-  },
-  {
-    id: 6,
-    image: "/images/beauty/IMG_4941.jpg",
     caption: "Mega volume for maximum drama ✨"
   }
 ];

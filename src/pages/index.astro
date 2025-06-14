@@ -2,6 +2,7 @@
 import LandingLayout from '../layouts/LandingLayout.astro';
 import { LuxuryHero } from '../components/beauty/LuxuryHero';
 import { ServiceShowcase } from '../components/beauty/ServiceShowcase';
+import { VideoShowcase } from '../components/beauty/VideoShowcase';
 import { LuxuryTestimonials } from '../components/beauty/LuxuryTestimonials';
 import { WhyChooseUs } from '../components/beauty/WhyChooseUs';
 import { InstagramGallery } from '../components/beauty/InstagramGallery';
@@ -24,6 +25,8 @@ const variant = 'beauty';
   <LuxuryHero client:load />
   
   <ServiceShowcase client:load />
+  
+  <VideoShowcase client:visible />
   
   <WhyChooseUs client:visible />
   

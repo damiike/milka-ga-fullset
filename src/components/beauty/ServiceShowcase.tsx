@@ -272,10 +272,22 @@ export function ServiceShowcase() {
           <p className="text-muted-foreground mb-4">Can't decide? Our artists will help you choose the perfect style during your consultation</p>
           <motion.a
             href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+            onClick={() => {
+              // Trigger confetti animation
+              triggerConfetti();
+              
+              // Track booking click with GTM
+              if (typeof window !== 'undefined' && (window as any).dataLayer) {
+                (window as any).dataLayer.push({
+                  event: 'booking_click',
+                  click_type: 'service_menu_link',
+                  button_text: 'View Full Service Menu'
+                });
+              }
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 font-medium hover:opacity-80 transition-opacity"
-            style={{ color: 'oklch(0.87 0.035 70.08)' }}
+            className="inline-flex items-center gap-2 font-medium hover:opacity-80 transition-opacity text-pink-600"
           >
             View Full Service Menu
             <motion.span

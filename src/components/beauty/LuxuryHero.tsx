@@ -48,7 +48,7 @@ export function LuxuryHero() {
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-8 pt-12 sm:pt-0"
+            className="mb-8 pt-6 sm:pt-0"
           >
             <img 
               src="https://milkacollective.com.au/wp-content/uploads/2021/07/MILKA-Transparent-Dark.png"

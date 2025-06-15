@@ -22,7 +22,7 @@ const videos: VideoItem[] = [
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
-    duration: "90 minutes",
+    duration: "75 minutes",
     popularity: "Most Popular for Daily Wear",
     highlights: [
       "Natural one-to-one application technique",

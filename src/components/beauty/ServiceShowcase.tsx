@@ -21,7 +21,7 @@ const services: Service[] = [
       {
         name: "Natural Classic Set",
         price: "$135",
-        duration: "90 min",
+        duration: "75 min",
         description: "One extension per natural lash for an elegant, natural enhancement"
       },
       {
@@ -43,22 +43,22 @@ const services: Service[] = [
     category: "Volume Lashes",
     items: [
       {
-        name: "Natural Russian Volume",
-        price: "$185",
-        duration: "120 min",
-        description: "Soft, fluffy lashes with 2-3 extensions per natural lash"
-      },
-      {
         name: "Full Russian Volume",
         price: "$210",
-        duration: "150 min",
+        duration: "120 min",
         description: "Dramatic volume with 4-6 ultra-fine extensions per lash",
         popular: true
       },
       {
+        name: "Natural Russian Volume",
+        price: "$185",
+        duration: "90 min",
+        description: "Soft, fluffy lashes with 2-3 extensions per natural lash"
+      },
+      {
         name: "Mega Russian Volume",
         price: "$295",
-        duration: "180 min",
+        duration: "150 min",
         description: "Maximum drama with 6-10 extensions for show-stopping lashes"
       }
     ]

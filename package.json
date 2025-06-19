@@ -36,6 +36,7 @@
     "zod": "^3.25.60"
   },
   "devDependencies": {
+    "@astrojs/cloudflare": "^12.5.4",
     "@tailwindcss/vite": "^4.1.8",
     "tailwindcss": "^4.1.8",
     "tw-animate-css": "^1.3.4"

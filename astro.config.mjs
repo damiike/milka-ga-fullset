@@ -16,6 +16,18 @@ export default defineConfig({
     assetsInclude: ['**/*.MOV', '**/*.mov', '**/*.mp4'],
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            animations: ['framer-motion'],
+            icons: ['lucide-react'],
+            utils: ['clsx', 'tailwind-merge']
+          }
+        }
+      }
     }
   },
   output: 'static',

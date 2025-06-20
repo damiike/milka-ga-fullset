@@ -52,6 +52,13 @@ const { title, description, ogImage = '/og-default.png', variant } = Astro.props
   <!-- Favicon -->
   <link rel="icon" href="/favicon.svg" />
   
+  <!-- DNS prefetch for external domains -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+  <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//us.posthog.com">
+  <link rel="dns-prefetch" href="//vimeo.com">
+  
   <!-- Google Fonts for luxury typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

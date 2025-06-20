@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Clock, Users, Sparkles } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { Play, Clock, Users, Sparkles, X } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface VideoItem {
   id: number;
-  videoFile: string;
+  vimeoId: string;
+  vimeoHash: string;
   poster: string;
   title: string;
   subtitle: string;
@@ -18,7 +19,8 @@ interface VideoItem {
 const videos: VideoItem[] = [
   {
     id: 1,
-    videoFile: "/videos/IMG_5635.mp4",
+    vimeoId: "1095029463",
+    vimeoHash: "db83b90006",
     poster: "/photos/IMG_5637.png",
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
@@ -35,8 +37,9 @@ const videos: VideoItem[] = [
   },
   {
     id: 2,
-    videoFile: "/videos/IMG_5382.mp4",
-    poster: "/photos/IMG_5383.png",
+    vimeoId: "1095058528",
+    vimeoHash: "890546880c",
+    poster: "/photos/IMG_5382.png",
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
@@ -52,7 +55,8 @@ const videos: VideoItem[] = [
   },
   {
     id: 3,
-    videoFile: "/videos/IMG_5254.mp4",
+    vimeoId: "1095029437",
+    vimeoHash: "a86d6a75e1",
     poster: "/photos/IMG_5258.png",
     title: "Russian Volume Lash Transformation",
     subtitle: "Maximum Impact for a Show-Stopping Look",
@@ -69,16 +73,72 @@ const videos: VideoItem[] = [
   }
 ];
 
-function VideoPlayer({ video, isPlaying, onClose }: { 
+// Optimized image component with lazy loading and performance improvements
+function OptimizedImage({ src, alt, className, onLoad }: {
+  src: string;
+  alt: string;
+  className: string;
+  onLoad?: () => void;
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          img.src = src;
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(img);
+    return () => observer.disconnect();
+  }, [src]);
+
+  return (
+    <div className="relative w-full h-full">
+      <img
+        ref={imgRef}
+        alt={alt}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onLoad={() => {
+          setIsLoaded(true);
+          onLoad?.();
+        }}
+        onError={() => setHasError(true)}
+        loading="lazy"
+        decoding="async"
+      />
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+      )}
+      {hasError && (
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+          <span className="text-gray-400 text-sm">Image unavailable</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VimeoPlayer({ video, isPlaying, onClose }: { 
   video: VideoItem; 
   isPlaying: boolean; 
   onClose: () => void; 
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  // Handle keyboard events
+  // Enhanced keyboard and touch event handling
   useEffect(() => {
     if (!isPlaying) return;
     
@@ -88,176 +148,316 @@ function VideoPlayer({ video, isPlaying, onClose }: {
       }
     };
 
+    // Prevent scroll on mobile when modal is open
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalStyle;
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
   }, [isPlaying, onClose]);
 
-  // Handle video loading and playback only when modal is open
+  // Enhanced iframe loading with error handling
   useEffect(() => {
-    if (!videoRef.current || !isPlaying) return;
+    if (!isPlaying) return;
     
-    const video = videoRef.current;
-    
-    // Reset states when opening
     setIsLoading(true);
     setHasError(false);
     
-    // Load and play video
-    const playVideo = async () => {
-      try {
-        // Don't call load() as it resets the src, just try to play
-        await video.play();
-      } catch (error) {
-        console.error('Error playing video:', error);
-        // Only set error if it's not an autoplay restriction
-        if (error.name !== 'NotAllowedError') {
-          setHasError(true);
-        }
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Longer timeout for mobile networks
+    
+    const errorTimer = setTimeout(() => {
+      if (isLoading) {
+        setHasError(true);
         setIsLoading(false);
       }
-    };
-    
-    // Small delay to ensure video element is ready
-    const timer = setTimeout(playVideo, 100);
+    }, 8000); // Error if takes too long
     
     return () => {
-      clearTimeout(timer);
-      // Clean up when closing
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
-      }
+      clearTimeout(loadingTimer);
+      clearTimeout(errorTimer);
     };
-  }, [isPlaying]);
+  }, [isPlaying, isLoading]);
+
+  // Handle touch events for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (e.target === modalRef.current) {
+      onClose();
+    }
+  }, [onClose]);
 
   if (!isPlaying) return null;
 
+  // Enhanced Vimeo URL with mobile optimizations
+  const vimeoEmbedUrl = `https://player.vimeo.com/video/${video.vimeoId}?h=${video.vimeoHash}&autoplay=1&title=0&byline=0&portrait=0&badge=0&dnt=1&muted=1&playsinline=1&responsive=1`;
+
   return (
-    <div 
-      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+    <motion.div
+      ref={modalRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
     >
-      <div 
-        className="relative w-full max-w-4xl mx-auto bg-black rounded-xl overflow-hidden aspect-video"
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
+        className="relative w-full max-w-5xl mx-auto bg-black rounded-xl sm:rounded-2xl overflow-hidden"
+        style={{ 
+          aspectRatio: '16/9',
+          maxHeight: '90vh',
+          maxWidth: '95vw'
+        }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Only render video element when modal is open to prevent preloading */}
-        {isPlaying && (
-          <video
-            ref={videoRef}
-            src={video.videoFile}
-            poster={video.poster}
-            className="w-full h-full object-contain"
-            controls
-            playsInline
-            preload="metadata"
-            onCanPlay={() => setIsLoading(false)}
-            onLoadedData={() => setIsLoading(false)}
-            onLoadStart={() => setIsLoading(true)}
-            onWaiting={() => setIsLoading(true)}
-            onPlaying={() => setIsLoading(false)}
-            onError={(e) => {
-              console.error('Error loading video:', e);
+        {/* Vimeo iframe with enhanced mobile support */}
+        {!hasError && (
+          <iframe
+            ref={iframeRef}
+            src={vimeoEmbedUrl}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowFullScreen
+            title={video.title}
+            loading="lazy"
+            onLoad={() => setIsLoading(false)}
+            onError={() => {
               setIsLoading(false);
               setHasError(true);
             }}
-          >
-            Your browser does not support the video tag.
-          </video>
+          />
         )}
         
-        {isLoading && !hasError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <div className="text-white">Loading video...</div>
-            </div>
-          </div>
-        )}
-        
+
+        {/* Error state */}
         {hasError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <div className="text-center text-white">
-              <div className="text-xl mb-2">⚠️ Video Error</div>
-              <div>Unable to load video. Please try again.</div>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="text-center text-white p-6">
+              <div className="text-4xl mb-4">⚠️</div>
+              <div className="text-xl mb-2">Video Error</div>
+              <div className="text-white/70 mb-4">Unable to load video. Please check your connection.</div>
               <button 
                 onClick={() => {
                   setHasError(false);
                   setIsLoading(true);
-                  if (videoRef.current) {
-                    videoRef.current.load();
-                  }
                 }}
-                className="mt-4 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition-colors mr-2"
+                className="px-6 py-3 bg-pink-500 text-white rounded-lg font-medium hover:bg-pink-600 transition-colors"
               >
                 Retry
-              </button>
-              <button 
-                onClick={onClose}
-                className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-              >
-                Close
               </button>
             </div>
           </div>
         )}
         
+        {/* Enhanced close button with better mobile touch targets */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors z-10"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/70 text-white p-3 rounded-full hover:bg-black/90 transition-colors z-20 touch-manipulation"
+          style={{ minWidth: '44px', minHeight: '44px' }} // WCAG touch target size
           aria-label="Close video"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          <X className="w-5 h-5" />
         </button>
-      </div>
-    </div>
+
+        {/* Video title overlay for context */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6">
+          <h3 className="text-white font-semibold text-lg sm:text-xl">{video.title}</h3>
+          <p className="text-white/80 text-sm sm:text-base">{video.subtitle}</p>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export const VideoShowcase = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [hasTrackedView, setHasTrackedView] = useState(false);
 
-  const handleVideoClick = (video: VideoItem) => {
+  // Check for reduced motion preference
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      setPrefersReducedMotion(mediaQuery.matches);
+      
+      const handleChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, []);
+
+  // Track section view
+  useEffect(() => {
+    if (hasTrackedView) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasTrackedView) {
+          setHasTrackedView(true);
+
+          // Track section view with GTM
+          if (typeof window !== 'undefined' && (window as any).dataLayer) {
+            (window as any).dataLayer.push({
+              event: 'section_view',
+              section_name: 'video_showcase',
+              event_category: 'Engagement',
+              event_action: 'Section View',
+              event_label: 'Video Showcase'
+            });
+          }
+
+          // Track section view with PostHog
+          if (typeof window !== 'undefined' && (window as any).posthog) {
+            (window as any).posthog.capture('section_view', {
+              section_name: 'video_showcase',
+              video_count: videos.length,
+              videos_available: videos.map(v => v.technique)
+            });
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const section = document.querySelector('[data-section="video-showcase"]');
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, [hasTrackedView]);
+
+  const handleVideoClick = useCallback((video: VideoItem) => {
     setSelectedVideo(video);
     setIsPlaying(true);
-    document.body.style.overflow = 'hidden';
     
-    // Trigger confetti effect if available
-    if (typeof window !== 'undefined' && (window as any).confetti) {
+    // Trigger confetti effect if available and motion is allowed
+    if (!prefersReducedMotion && typeof window !== 'undefined' && (window as any).confetti) {
       (window as any).confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 }
       });
     }
-  };
 
-  const handleCloseVideo = () => {
+    // Track video play event with GTM
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'video_play',
+        video_title: video.title,
+        video_technique: video.technique,
+        video_id: video.vimeoId,
+        video_duration: video.duration,
+        video_popularity: video.popularity,
+        event_category: 'Video',
+        event_action: 'Play',
+        event_label: video.title
+      });
+    }
+
+    // Track video play event with PostHog
+    if (typeof window !== 'undefined' && (window as any).posthog) {
+      (window as any).posthog.capture('video_play', {
+        video_title: video.title,
+        video_technique: video.technique,
+        video_id: video.vimeoId,
+        video_duration: video.duration,
+        video_popularity: video.popularity,
+        section: 'video_showcase'
+      });
+    }
+  }, [prefersReducedMotion]);
+
+  const handleCloseVideo = useCallback(() => {
     setIsPlaying(false);
-    document.body.style.overflow = '';
-  };
+    setSelectedVideo(null);
 
-  const handleBookNow = (technique: string) => {
-    // Track booking click with GTM if available
+    // Track video close event with GTM
+    if (selectedVideo && typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'video_close',
+        video_title: selectedVideo.title,
+        video_technique: selectedVideo.technique,
+        video_id: selectedVideo.vimeoId,
+        event_category: 'Video',
+        event_action: 'Close',
+        event_label: selectedVideo.title
+      });
+    }
+
+    // Track video close event with PostHog
+    if (selectedVideo && typeof window !== 'undefined' && (window as any).posthog) {
+      (window as any).posthog.capture('video_close', {
+        video_title: selectedVideo.title,
+        video_technique: selectedVideo.technique,
+        video_id: selectedVideo.vimeoId,
+        section: 'video_showcase'
+      });
+    }
+  }, [selectedVideo]);
+
+  const handleBookNow = useCallback((technique: string, videoTitle: string) => {
+    // Enhanced GTM tracking
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: 'booking_click',
         click_type: 'video_showcase',
         video_technique: technique,
-        button_text: 'Book This Style'
+        video_title: videoTitle,
+        button_text: 'Book This Style',
+        source_section: 'video_showcase',
+        event_category: 'Conversion',
+        event_action: 'Booking Click',
+        event_label: `${technique} - ${videoTitle}`,
+        conversion_type: 'booking_intent'
+      });
+    }
+
+    // Enhanced PostHog tracking
+    if (typeof window !== 'undefined' && (window as any).posthog) {
+      (window as any).posthog.capture('booking_click', {
+        click_type: 'video_showcase',
+        video_technique: technique,
+        video_title: videoTitle,
+        button_text: 'Book This Style',
+        source_section: 'video_showcase',
+        conversion_type: 'booking_intent'
+      });
+
+      // Also track as conversion
+      (window as any).posthog.capture('conversion', {
+        conversion_type: 'booking_click',
+        source: 'video_showcase',
+        technique: technique,
+        video_title: videoTitle
       });
     }
     
-    // Redirect to booking
+    // Redirect to booking with analytics
     window.location.href = 'https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926';
-  };
+  }, []);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden">
+    <section 
+      className="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden"
+      data-section="video-showcase"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full filter blur-3xl opacity-20" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-rose-100 to-pink-100 rounded-full filter blur-3xl opacity-20" />
@@ -296,82 +496,128 @@ export const VideoShowcase = () => {
         </motion.div>
 
         {/* Video Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
           {videos.map((video, index) => (
             <motion.div
               key={video.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2, duration: 0.8 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl overflow-hidden shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-300"
+              initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+              whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+              transition={prefersReducedMotion ? {} : { delay: index * 0.15, duration: 0.6 }}
+              viewport={{ once: true, margin: "-50px" }}
+              className="bg-white rounded-2xl overflow-hidden shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-300 group"
             >
               {/* Video Thumbnail */}
               <div className="relative aspect-square overflow-hidden">
                 <div 
-                  className="relative w-full h-full cursor-pointer group"
+                  className="relative w-full h-full cursor-pointer touch-manipulation"
                   onClick={() => handleVideoClick(video)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Play ${video.title} video`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleVideoClick(video);
+                    }
+                  }}
                 >
-                  <img 
-                    src={video.poster} 
-                    alt={video.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  <OptimizedImage
+                    src={video.poster}
+                    alt={`${video.title} - ${video.subtitle}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
-                      <Play className="w-6 h-6 text-pink-500" fill="currentColor" />
-                    </div>
+                  
+                  {/* Play button overlay - always visible on mobile for better UX */}
+                  <div className="absolute inset-0 bg-black/20 sm:bg-black/30 flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                    <motion.div 
+                      className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 rounded-full flex items-center justify-center shadow-lg"
+                      whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
+                      whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 ml-1" fill="currentColor" />
+                    </motion.div>
                   </div>
+
+                  {/* Video duration badge */}
+                  <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                    {video.duration}
+                  </div>
+
+                  {/* Popularity badge */}
+                  {video.popularity && (
+                    <div className="absolute top-3 left-3 bg-pink-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                      {video.popularity}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Video Info */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{video.title}</h3>
-                <p className="text-pink-600 font-medium mb-3">{video.subtitle}</p>
-                <p className="text-gray-600 mb-4">{video.description}</p>
+              <div className="p-4 sm:p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 leading-tight">{video.title}</h3>
+                  <p className="text-pink-600 font-medium mb-3 text-sm sm:text-base">{video.subtitle}</p>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed" style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>{video.description}</p>
+                </div>
                 
-                <div className="flex items-center gap-4 text-sm text-gray-500 mt-4">
+                <div className="flex items-center justify-between gap-4 text-sm text-gray-500 mb-4 py-2 bg-gray-50 rounded-lg px-3">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{video.duration}</span>
+                    <Clock className="w-4 h-4 text-pink-500" />
+                    <span className="font-medium">{video.duration}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{video.popularity}</span>
+                    <Users className="w-4 h-4 text-pink-500" />
+                    <span className="font-medium">{video.popularity}</span>
                   </div>
                 </div>
                 
                 {video.highlights && video.highlights.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="font-medium text-gray-900 mb-2">Highlights:</h4>
-                    <ul className="grid grid-cols-1 gap-2">
-                      {video.highlights.map((highlight, index) => (
-                        <li key={index} className="flex items-start gap-2">
+                  <div className="mb-6">
+                    <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Key Benefits:</h4>
+                    <ul className="space-y-2">
+                      {video.highlights.slice(0, 3).map((highlight, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm">
                           <Sparkles className="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-600">{highlight}</span>
+                          <span className="text-gray-700 leading-relaxed">{highlight}</span>
                         </li>
                       ))}
+                      {video.highlights.length > 3 && (
+                        <li className="text-xs text-gray-500 pl-6">
+                          +{video.highlights.length - 3} more benefits
+                        </li>
+                      )}
                     </ul>
                   </div>
                 )}
                 
-                <button
-                  onClick={() => handleBookNow(video.technique)}
-                  className="mt-6 w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 px-6 rounded-lg font-medium hover:opacity-90 transition-opacity"
+                <motion.button
+                  onClick={() => handleBookNow(video.technique, video.title)}
+                  className="w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 sm:py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation text-sm sm:text-base"
+                  whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
+                  whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
+                  style={{ minHeight: '44px' }} // WCAG touch target size
                 >
-                  Book This Style
-                </button>
+                  <span className="flex items-center justify-center gap-2">
+                    Book This Style
+                    <span className="text-lg">✨</span>
+                  </span>
+                </motion.button>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Video Player Modal */}
+      {/* Vimeo Player Modal */}
       <AnimatePresence>
         {isPlaying && selectedVideo && (
-          <VideoPlayer 
+          <VimeoPlayer 
             video={selectedVideo} 
             isPlaying={isPlaying} 
             onClose={handleCloseVideo} 

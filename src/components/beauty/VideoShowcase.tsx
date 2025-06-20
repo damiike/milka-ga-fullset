@@ -35,8 +35,8 @@ const videos: VideoItem[] = [
   },
   {
     id: 2,
-    videoFile: "/videos/IMG_3684.mp4",
-    poster: "/photos/IMG_3723.png",
+    videoFile: "/videos/IMG_5382.mp4",
+    poster: "/photos/IMG_5383.png",
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
@@ -76,6 +76,7 @@ function VideoPlayer({ video, isPlaying, onClose }: {
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // Handle keyboard events
   useEffect(() => {
@@ -91,27 +92,40 @@ function VideoPlayer({ video, isPlaying, onClose }: {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPlaying, onClose]);
 
-  // Handle video play/pause when modal opens/closes
+  // Handle video loading and playback only when modal is open
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || !isPlaying) return;
     
-    if (isPlaying) {
-      videoRef.current.play().catch(error => {
+    const video = videoRef.current;
+    
+    // Reset states when opening
+    setIsLoading(true);
+    setHasError(false);
+    
+    // Load and play video
+    const playVideo = async () => {
+      try {
+        // Don't call load() as it resets the src, just try to play
+        await video.play();
+      } catch (error) {
         console.error('Error playing video:', error);
-      });
-    } else {
-      videoRef.current.pause();
-      if (videoRef.current.currentTime) {
-        videoRef.current.currentTime = 0;
+        // Only set error if it's not an autoplay restriction
+        if (error.name !== 'NotAllowedError') {
+          setHasError(true);
+        }
+        setIsLoading(false);
       }
-    }
+    };
+    
+    // Small delay to ensure video element is ready
+    const timer = setTimeout(playVideo, 100);
     
     return () => {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        if (videoRef.current.currentTime) {
-          videoRef.current.currentTime = 0;
-        }
+      clearTimeout(timer);
+      // Clean up when closing
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
       }
     };
   }, [isPlaying]);
@@ -127,25 +141,64 @@ function VideoPlayer({ video, isPlaying, onClose }: {
         className="relative w-full max-w-4xl mx-auto bg-black rounded-xl overflow-hidden aspect-video"
         onClick={e => e.stopPropagation()}
       >
-        <video
-          ref={videoRef}
-          src={video.videoFile}
-          poster={video.poster}
-          className="w-full h-full object-contain"
-          controls
-          playsInline
-          onCanPlay={() => setIsLoading(false)}
-          onError={(e) => {
-            console.error('Error loading video:', e);
-            setIsLoading(false);
-          }}
-        >
-          Your browser does not support the video tag.
-        </video>
+        {/* Only render video element when modal is open to prevent preloading */}
+        {isPlaying && (
+          <video
+            ref={videoRef}
+            src={video.videoFile}
+            poster={video.poster}
+            className="w-full h-full object-contain"
+            controls
+            playsInline
+            preload="metadata"
+            onCanPlay={() => setIsLoading(false)}
+            onLoadedData={() => setIsLoading(false)}
+            onLoadStart={() => setIsLoading(true)}
+            onWaiting={() => setIsLoading(true)}
+            onPlaying={() => setIsLoading(false)}
+            onError={(e) => {
+              console.error('Error loading video:', e);
+              setIsLoading(false);
+              setHasError(true);
+            }}
+          >
+            Your browser does not support the video tag.
+          </video>
+        )}
         
-        {isLoading && (
+        {isLoading && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <div className="text-white">Loading video...</div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="text-white">Loading video...</div>
+            </div>
+          </div>
+        )}
+        
+        {hasError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div className="text-center text-white">
+              <div className="text-xl mb-2">⚠️ Video Error</div>
+              <div>Unable to load video. Please try again.</div>
+              <button 
+                onClick={() => {
+                  setHasError(false);
+                  setIsLoading(true);
+                  if (videoRef.current) {
+                    videoRef.current.load();
+                  }
+                }}
+                className="mt-4 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition-colors mr-2"
+              >
+                Retry
+              </button>
+              <button 
+                onClick={onClose}
+                className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         )}
         

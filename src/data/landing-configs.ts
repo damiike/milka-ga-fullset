@@ -153,7 +153,6 @@ export const landingConfigs = {
           "Maximum impact & drama",
           "Long-lasting results"
         ],
-        highlighted: true,
         ctaText: "Book Volume Set",
         ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
       },
@@ -163,12 +162,13 @@ export const landingConfigs = {
         period: "starting from",
         description: "Unique styles for every occasion",
         features: [
+          "Full Hybrid Set - $185 (Most Popular)",
           "Wet Look Full Set - $170",
-          "Full Hybrid Set - $185",
           "Trending styles available",
           "Custom styling consultation",
           "Perfect for special events"
         ],
+        highlighted: true,
         ctaText: "Book Specialty",
         ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
       },
@@ -181,7 +181,7 @@ export const landingConfigs = {
           "Bottom Lashes - $60",
           "Wispy Style - $20",
           "Can be added to any set",
-          "Customize your look",
+          "Customise your look",
           "Complimentary consultation"
         ],
         ctaText: "View Add-Ons",
@@ -191,8 +191,8 @@ export const landingConfigs = {
     
     faq: [
       {
-        question: "What are the different types of lash extensions available?",
-        answer: "We offer several lash extension styles to suit your desired look:\n\n### 1. Classic Lashes\n**Look:** Natural and subtle enhancement  \n**Application:** One extension applied to each natural lash  \n**Best for:** First-timers or those who prefer a natural, everyday look  \n**Maintenance:** Infills recommended every 2-3 weeks  \n![Classic Lashes](https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80)\n\n### 2. Hybrid Lashes\n**Look:** Balance between natural and dramatic  \n**Application:** Mix of classic and volume techniques  \n**Best for:** Adding fullness while maintaining a natural appearance  \n**Maintenance:** Infills recommended every 2-3 weeks  \n![Hybrid Lashes](https://images.unsplash.com/photo-1515886653613-034df15bb0c2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80)\n\n### 3. Volume Lashes\n**Look:** Full, dramatic, and glamorous  \n**Application:** Multiple lightweight extensions (2-6) per natural lash  \n**Best for:** Special occasions or those who love a bold look  \n**Maintenance:** Infills recommended every 2-3 weeks  \n![Volume Lashes](https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80)\n\n### 4. Mega Volume Lashes\n**Look:** Ultra-dramatic and feathery  \n**Application:** Multiple lightweight fans (5+ extensions per lash)  \n**Best for:** Special events or those who love maximum impact  \n**Maintenance:** Infills recommended every 2-3 weeks  \n![Mega Volume Lashes](https://images.unsplash.com/photo-1524504388940-b1c172265116?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80)\n\n**Not sure which style to choose?** Book a consultation and our lash artists will help you select the perfect look for your eye shape and lifestyle!"
+        question: "What types of lash extensions do you offer?",
+        answer: "We offer a complete range of lash extension styles from natural to ultra-dramatic. Each service is customized to your eye shape and desired look. Browse our individual service FAQs below to learn more about each option."
       },
       {
         question: "How do I care for my lash extensions?",
@@ -209,6 +209,46 @@ export const landingConfigs = {
       {
         question: "Do you offer gift vouchers?",
         answer: "Yes! Gift vouchers are available for any service or amount. Perfect for birthdays, special occasions, or treating someone special. To purchase a gift voucher, simply click on any 'Book Now' button and select 'Gift Card' as the purchase option during checkout."
+      },
+      {
+        question: "What is a Natural Classic Set?",
+        answer: "Perfect for everyday elegance. One extension applied to each natural lash for a subtle, natural enhancement. Ideal for first-timers or those who prefer a refined, understated look that enhances your natural beauty without being obvious. Lasts 2-3 weeks with proper care."
+      },
+      {
+        question: "What is a Full Classic Set?",
+        answer: "Enhanced natural beauty. A fuller classic application covering more lashes for increased definition while maintaining a natural appearance. Perfect for those who want noticeable enhancement that still looks effortlessly natural. Lasts 2-3 weeks with proper care."
+      },
+      {
+        question: "What is a Half Classic Set?",
+        answer: "Subtle enhancement. Targeted application on key areas to add definition and length where you need it most. Great for those with naturally full lashes who want a light touch of glamour. Perfect for trying lash extensions for the first time."
+      },
+      {
+        question: "What is a Full Hybrid Set?",
+        answer: "The perfect balance. A sophisticated blend of classic and volume techniques that creates fullness while maintaining natural elegance. Our most requested service - ideal for any occasion and perfect for those who can't decide between natural and dramatic. Gives you the best of both worlds."
+      },
+      {
+        question: "What is a Wet Look Full Set?",
+        answer: "Trendy glossy finish. Achieves the coveted 'wet look' with a glossy, defined finish that mimics the appearance of freshly applied mascara. Perfect for those who love the fresh, dewy lash trend that's popular on social media."
+      },
+      {
+        question: "What is Natural Russian Volume?",
+        answer: "Soft, full glamour. Multiple lightweight extensions create natural-looking fullness without heaviness. Perfect for adding volume while maintaining a soft, natural appearance. Great for those who want more fullness but still want to look natural."
+      },
+      {
+        question: "What is Full Russian Volume?",
+        answer: "Dramatic impact. Full, bold volume that creates maximum impact and glamour. Ideal for special occasions or those who love a dramatic, eye-catching look. Perfect for events, photoshoots, or if you love bold, statement lashes."
+      },
+      {
+        question: "What is Mega Russian Volume?",
+        answer: "Ultra-luxurious drama. Our most dramatic service featuring ultra-full, feathery lashes with maximum volume and length. Perfect for photo shoots, special events, or those who want the most glamorous look possible. The ultimate in lash luxury and drama."
+      },
+      {
+        question: "What are Bottom Lashes?",
+        answer: "Bottom lash extensions add definition and balance to your look by enhancing your lower lash line. Perfect for special occasions, photoshoots, or if you want maximum eye impact. Can be added to any full set service for a complete, dramatic transformation."
+      },
+      {
+        question: "What is Wispy Style?",
+        answer: "A trendy styling technique that creates a textured, feathery look with varying lengths for a naturally wispy appearance. This add-on can be applied to any lash set to create a more dimensional, Instagram-worthy finish that's perfect for those who love a modern, effortless look."
       }
     ],
     

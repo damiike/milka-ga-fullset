@@ -1,11 +1,20 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Clock, Users, Sparkles } from 'lucide-react';
-import { useState } from 'react';
-import { useConfetti } from '../../hooks/useConfetti';
+import { useState, useRef, useEffect } from 'react';
+
+// Vimeo Player API types
+declare global {
+  interface Window {
+    Vimeo: any;
+  }
+}
 
 interface VideoItem {
   id: number;
-  embedUrl: string;
+  videoUrl: string;
+  videoType: 'vimeo' | 'youtube' | 'html5';
+  videoId: string;
+  poster: string;
   title: string;
   subtitle: string;
   description: string;
@@ -18,75 +27,197 @@ interface VideoItem {
 const videos: VideoItem[] = [
   {
     id: 1,
-    embedUrl: "https://www.instagram.com/p/DKhGG65TaWN/embed",
+    videoUrl: "https://vimeo.com/1095029463",
+    videoId: "1095029463",
+    videoType: 'vimeo',
+    poster: "https://vumbnail.com/1095029463.jpg",
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
-    duration: "75 minutes",
-    popularity: "Most Popular for Daily Wear",
+    duration: "1:15",
+    popularity: "Most Popular",
     highlights: [
-      "Natural one-to-one application technique",
-      "Perfect for first-time lash clients",
-      "Enhances your natural eye shape",
-      "Comfortable and lightweight feel"
+      "One extension per natural lash",
+      "Natural, defined look",
+      "Perfect for everyday wear",
+      "Lasts 2-3 weeks"
     ],
     technique: 'classic'
   },
   {
     id: 2,
-    embedUrl: "https://www.instagram.com/p/DK1P7ZyTk2O/embed",
+    videoUrl: "https://vimeo.com/1095029345",
+    videoId: "1095029345",
+    videoType: 'vimeo',
+    poster: "https://vumbnail.com/1095029345.jpg",
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
-    duration: "120 minutes",
-    popularity: "Client Favorite - Best of Both Worlds",
+    duration: "1:30",
+    popularity: "Trending",
     highlights: [
-      "Mix of classic and volume techniques",
-      "Fuller look while maintaining natural appearance", 
-      "Perfect for special events and everyday",
-      "Customized to your eye shape and style"
+      "Mix of classic and volume lashes",
+      "Fuller, wispy look",
+      "Great for special occasions",
+      "Lasts 3-4 weeks"
     ],
     technique: 'hybrid'
   },
   {
     id: 3,
-    embedUrl: "https://www.instagram.com/p/DFmzJ9YTh6f/embed",
-    title: "Volume Lash Transformation",
-    subtitle: "Dramatic Glamour for Special Occasions",
-    description: "Experience the artistry of Russian volume technique. Multiple ultra-fine extensions create breathtaking fullness and drama that photographs beautifully.",
-    duration: "150 minutes",
-    popularity: "Perfect for Events & Photography",
+    videoUrl: "https://vimeo.com/1095029437",
+    videoId: "1095029437",
+    videoType: 'vimeo',
+    poster: "https://vumbnail.com/1095029437.jpg",
+    title: "Russian Volume Lash Transformation",
+    subtitle: "Maximum Impact for a Show-Stopping Look",
+    description: "Experience the ultimate in lash luxury with our Russian volume lashes. Multiple lightweight extensions per natural lash create a dramatic, full look that lasts.",
+    duration: "2:15",
+    popularity: "New",
     highlights: [
-      "Russian volume fan technique",
-      "Maximum fullness and dramatic impact",
-      "Lightweight despite increased volume",
-      "Perfect for weddings and special events"
+      "Multiple lightweight extensions per lash",
+      "Dramatic, full look with a feather-light feel",
+      "Fully customizable density",
+      "Lasts 4-6 weeks with proper care"
     ],
     technique: 'volume'
   }
 ];
 
-export function VideoShowcase() {
-  const [playingVideo, setPlayingVideo] = useState<number | null>(null);
-  const { triggerConfetti } = useConfetti();
+function VideoPlayer({ video, isPlaying, onClose }: { 
+  video: VideoItem; 
+  isPlaying: boolean; 
+  onClose: () => void; 
+}) {
+  const playerRef = useRef<HTMLDivElement>(null);
+  const playerInstance = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleVideoClick = (videoId: number) => {
-    setPlayingVideo(videoId);
+  // Handle keyboard events
+  useEffect(() => {
+    if (!isPlaying) return;
     
-    // Track video click with GTM
-    if (typeof window !== 'undefined' && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
-        event: 'video_click',
-        click_type: 'instagram_embed',
-        video_id: videoId
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPlaying, onClose]);
+
+  // Load Vimeo API script
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://player.vimeo.com/api/player.js';
+    script.async = true;
+    
+    script.onload = () => {
+      if (playerRef.current && !playerInstance.current) {
+        playerRef.current.innerHTML = ''; // Clear any existing content
+        
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://player.vimeo.com/video/${video.videoId}?autoplay=1&loop=0&title=0&byline=0&portrait=0&color=ff69b4`;
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '0.5rem';
+        
+        playerRef.current.appendChild(iframe);
+        
+        // Initialize the player
+        playerInstance.current = new window.Vimeo.Player(iframe);
+        setIsLoading(false);
+        
+        // Handle player ready
+        playerInstance.current.ready().then(() => {
+          console.log('Vimeo player ready');
+        });
+      }
+    };
+
+    document.body.appendChild(script);
+    
+    // Cleanup function
+    return () => {
+      if (playerInstance.current) {
+        playerInstance.current.destroy();
+        playerInstance.current = null;
+      }
+      if (script.parentNode) {
+        document.body.removeChild(script);
+      }
+      setIsLoading(true);
+    };
+  }, [isPlaying, video.videoId]);
+
+  if (!isPlaying) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="relative w-full max-w-4xl mx-auto bg-black rounded-xl overflow-hidden aspect-video"
+        onClick={e => e.stopPropagation()}
+      >
+        <div 
+          ref={playerRef}
+          className="w-full h-full"
+        >
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-white">Loading video...</div>
+            </div>
+          )}
+        </div>
+        
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors z-10"
+          aria-label="Close video"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export const VideoShowcase = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
+
+  const handleVideoClick = (video: VideoItem) => {
+    setSelectedVideo(video);
+    setIsPlaying(true);
+    document.body.style.overflow = 'hidden';
+    
+    // Trigger confetti effect if available
+    if (typeof window !== 'undefined' && (window as any).confetti) {
+      (window as any).confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
       });
     }
   };
 
+  const handleCloseVideo = () => {
+    setIsPlaying(false);
+    document.body.style.overflow = '';
+  };
+
   const handleBookNow = (technique: string) => {
-    triggerConfetti();
-    
-    // Track booking click with GTM
+    // Track booking click with GTM if available
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: 'booking_click',
@@ -96,7 +227,7 @@ export function VideoShowcase() {
       });
     }
     
-    // Redirect to booking in same window
+    // Redirect to booking
     window.location.href = 'https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926';
   };
 
@@ -152,123 +283,76 @@ export function VideoShowcase() {
             >
               {/* Video Thumbnail */}
               <div className="relative aspect-square overflow-hidden">
-                {playingVideo === video.id ? (
-                  <iframe
-                    src={video.embedUrl}
-                    className="w-full h-full border-0"
-                    frameBorder="0"
-                    scrolling="no"
-                    allow="encrypted-media"
-                    title={video.title}
+                <div 
+                  className="relative w-full h-full cursor-pointer group"
+                  onClick={() => handleVideoClick(video)}
+                >
+                  <img 
+                    src={video.poster} 
+                    alt={video.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                ) : (
-                  <div 
-                    className="relative w-full h-full bg-gradient-to-br from-pink-100 to-rose-100 cursor-pointer group"
-                    onClick={() => handleVideoClick(video.id)}
-                  >
-                    {/* Play Button Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="bg-white/90 backdrop-blur-sm rounded-full p-6 shadow-xl group-hover:bg-white transition-all"
-                      >
-                        <Play className="w-8 h-8 text-pink-600 ml-1" fill="currentColor" />
-                      </motion.div>
-                    </div>
-                    
-                    {/* Video Info Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                      <div className="flex items-center gap-2 text-white text-sm">
-                        <Clock className="w-4 h-4" />
-                        <span>{video.duration}</span>
-                        <span className="ml-auto bg-pink-500 px-2 py-1 rounded-full text-xs">
-                          {video.technique.toUpperCase()}
-                        </span>
-                      </div>
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center transform transition-transform group-hover:scale-110">
+                      <Play className="w-6 h-6 text-pink-500" fill="currentColor" />
                     </div>
                   </div>
-                )}
+                </div>
               </div>
 
-              {/* Video Details */}
+              {/* Video Info */}
               <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-                    {video.title}
-                  </h3>
-                  <p className="text-pink-600 font-medium mb-3">
-                    {video.subtitle}
-                  </p>
-                  <p className="text-gray-600 leading-relaxed">
-                    {video.description}
-                  </p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{video.title}</h3>
+                <p className="text-pink-600 font-medium mb-3">{video.subtitle}</p>
+                <p className="text-gray-600 mb-4">{video.description}</p>
+                
+                <div className="flex items-center gap-4 text-sm text-gray-500 mt-4">
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>{video.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>{video.popularity}</span>
+                  </div>
                 </div>
-
-                {/* Popularity Badge */}
-                <div className="flex items-center gap-2 mb-4">
-                  <Users className="w-4 h-4 text-orange-500" />
-                  <span className="text-sm font-medium text-orange-700 bg-orange-50 px-3 py-1 rounded-full">
-                    {video.popularity}
-                  </span>
-                </div>
-
-                {/* Highlights */}
-                <div className="mb-6">
-                  <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-pink-500" />
-                    What You'll See:
-                  </h4>
-                  <ul className="space-y-2">
-                    {video.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                        <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-2 flex-shrink-0" />
-                        {highlight}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* CTA Button */}
-                <motion.button
+                
+                {video.highlights && video.highlights.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="font-medium text-gray-900 mb-2">Highlights:</h4>
+                    <ul className="grid grid-cols-1 gap-2">
+                      {video.highlights.map((highlight, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <Sparkles className="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-600">{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                <button
                   onClick={() => handleBookNow(video.technique)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground font-medium rounded-full transition-all luxury-shadow"
+                  className="mt-6 w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 px-6 rounded-lg font-medium hover:opacity-90 transition-opacity"
                 >
                   Book This Style
-                </motion.button>
+                </button>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <div className="bg-white rounded-2xl p-8 shadow-xl border border-pink-100 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Still Deciding Which Style is Right for You?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Book a free consultation and let our experts help you choose the perfect lash style for your lifestyle and preferences.
-            </p>
-            <motion.button
-              onClick={() => handleBookNow('consultation')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-secondary text-secondary-foreground px-8 py-3 rounded-full font-medium shadow-lg hover:bg-secondary/80 transition-all"
-            >
-              Book Free Consultation
-            </motion.button>
-          </div>
-        </motion.div>
       </div>
+
+      {/* Video Player Modal */}
+      <AnimatePresence>
+        {isPlaying && selectedVideo && (
+          <VideoPlayer 
+            video={selectedVideo} 
+            isPlaying={isPlaying} 
+            onClose={handleCloseVideo} 
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
-}
+};

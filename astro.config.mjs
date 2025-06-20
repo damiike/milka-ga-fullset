@@ -7,6 +7,19 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   integrations: [react()],
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: {
+      fs: {
+        allow: ['..']
+      }
+    },
+    assetsInclude: ['**/*.MOV', '**/*.mov', '**/*.mp4'],
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }
+  },
+  output: 'static',
+  build: {
+    format: 'file'
   }
 });

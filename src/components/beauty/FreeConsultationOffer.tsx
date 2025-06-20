@@ -64,10 +64,6 @@ export function FreeConsultationOffer() {
 
         {/* Value proposition */}
         <div className="text-center">
-          <p className="text-white/80 text-sm mb-4">
-            Normally $50 value • FREE with your first full set
-          </p>
-          
           <motion.a
             href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
             onClick={() => {

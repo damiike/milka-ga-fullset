@@ -76,7 +76,8 @@ const services: Service[] = [
         name: "Full Hybrid Set",
         price: "$185",
         duration: "120 min",
-        description: "Perfect blend of classic and volume for textured fullness"
+        description: "Perfect blend of classic and volume for textured fullness",
+        popular: true
       }
     ]
   },

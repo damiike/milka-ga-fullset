@@ -35,11 +35,10 @@ const variant = 'beauty';
     <div class="container mx-auto px-6">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">
-          New Client
-          <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400"> Special Offer</span>
+          <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400">Free Consultation</span> with Every Full Set
         </h2>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-          We want your first experience to be perfect. That's why every new full set booking includes a complimentary consultation.
+          Book any full set and receive a complimentary consultation. Our experts will help you choose the perfect lash style tailored to your lifestyle and preferences.
         </p>
       </div>
       <FreeConsultationOffer client:visible />
@@ -49,6 +48,52 @@ const variant = 'beauty';
   <LuxuryTestimonials client:visible />
   
   <InstagramGallery client:visible />
+  
+  <!-- Help Choosing CTA -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+      <div 
+        class="bg-white rounded-2xl p-8 shadow-xl border border-pink-100 max-w-3xl mx-auto text-center animate-fade-in-up"
+        style="opacity: 0; animation: fadeInUp 0.6s ease-out forwards;"
+      >
+        <h3 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
+          Need Help Choosing Your Perfect Lash Style?
+        </h3>
+        <p class="text-gray-600 mb-6 text-lg">
+          Call our lash experts now for free, personalised advice! We'll help you choose the perfect style for your eyes and lifestyle.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="tel:0480095789"
+            class="bg-gradient-to-r from-pink-500 to-rose-400 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all text-center"
+            onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'phone_click', click_type: 'help_choosing' }); }"
+          >
+            Call Now: 0480 095 789
+          </a>
+          <a
+            href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/booking?menu=true"
+            class="bg-white text-gray-800 px-8 py-3 rounded-full font-medium shadow-lg border border-gray-200 hover:bg-gray-50 transition-all text-center"
+            onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'help_choosing' }); }"
+          >
+            Book a Consultation
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </section>
   
   <FAQ faqs={config.faq || []} client:visible />
   

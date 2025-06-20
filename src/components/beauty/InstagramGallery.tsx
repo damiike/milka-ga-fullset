@@ -1,39 +1,123 @@
 import { motion } from 'framer-motion';
-import { Instagram } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 
 interface InstagramPost {
   id: number;
   image: string;
   caption: string;
+  title: string;
 }
 
 // Real client work photos from Milka Collective
 const posts: InstagramPost[] = [
   {
     id: 1,
-    image: "/images/beauty/IMG_4941.jpg",
-    caption: "Russian Volume perfection ✨"
+    image: "/photos/IMG_5383.png",
+    caption: "Russian Volume perfection for a bold, dramatic look ✨",
+    title: "Russian Volume"
   },
   {
     id: 2,
-    image: "/images/beauty/0C70369B-5DD1-4E6D-ADD6-DD7BACAA1104.JPG",
-    caption: "Natural classic set for everyday glam"
+    image: "/photos/IMG_4941.jpg",
+    caption: "Wet look lashes for a glossy, defined finish",
+    title: "Wet Look"
   },
   {
     id: 3,
-    image: "/images/beauty/1F35AADC-3C01-48D7-AAE9-52872ECB0860.JPG",
-    caption: "The transformation is everything 💕"
+    image: "/photos/0C70369B-5DD1-4E6D-ADD6-DD7BACAA1104.JPG",
+    caption: "Natural classic set for everyday glam",
+    title: "Classic"
   },
   {
     id: 4,
-    image: "/images/beauty/5CEDA37A-9CA2-4FEC-AD75-020DDD36610A.JPG",
-    caption: "Wet look lashes are trending!"
+    image: "/photos/1F35AADC-3C01-48D7-AAE9-52872ECB0860.JPG",
+    caption: "The transformation is everything 💕",
+    title: "Hybrid"
   },
   {
     id: 5,
-    image: "/images/beauty/IMG_4940.jpg",
-    caption: "Mega volume for maximum drama ✨"
+    image: "/photos/5CEDA37A-9CA2-4FEC-AD75-020DDD36610A.JPG",
+    caption: "Wet look lashes are trending!",
+    title: "Classic"
+  },
+  {
+    id: 6,
+    image: "/photos/IMG_4940.jpg",
+    caption: "Mega volume for maximum drama ✨",
+    title: "Hybrid"
+  },
+  {
+    id: 7,
+    image: "/photos/395376D9-1963-4F81-A73F-A1949D441530.JPG",
+    caption: "Flawless lash extensions ✨",
+    title: "Hybrid"
+  },
+  {
+    id: 8,
+    image: "/photos/31544E47-DED2-4D2D-B0E0-487808AA2E0C.JPG",
+    caption: "Beautiful lash work ✨",
+    title: ""
+  },
+  {
+    id: 9,
+    image: "/photos/IMG_3559.jpg",
+    caption: "Stunning lash transformation",
+    title: ""
+  },
+  {
+    id: 10,
+    image: "/photos/IMG_3723.png",
+    caption: "Perfect lash application",
+    title: ""
+  },
+  {
+    id: 11,
+    image: "/photos/IMG_3821.PNG",
+    caption: "Gorgeous lash extensions",
+    title: ""
+  },
+  {
+    id: 12,
+    image: "/photos/IMG_4023.PNG",
+    caption: "Flawless lash work",
+    title: ""
+  },
+  {
+    id: 13,
+    image: "/photos/IMG_4589.PNG",
+    caption: "Beautiful lash styling",
+    title: ""
+  },
+  {
+    id: 14,
+    image: "/photos/IMG_4655.png",
+    caption: "Perfect lash finish",
+    title: ""
+  },
+  {
+    id: 15,
+    image: "/photos/IMG_5010.jpg",
+    caption: "Stunning lash design",
+    title: ""
+  },
+  {
+    id: 16,
+    image: "/photos/IMG_5119.jpg",
+    caption: "Amazing lash transformation",
+    title: ""
+  },
+  {
+    id: 17,
+    image: "/photos/IMG_5258.png",
+    caption: "Professional lash work",
+    title: ""
+  },
+  {
+    id: 18,
+    image: "/photos/IMG_5637.png",
+    caption: "Expert lash application",
+    title: ""
   }
 ];
 
@@ -58,9 +142,9 @@ export function InstagramGallery() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 mb-4"
           >
-            <Instagram className="w-5 h-5 text-primary" />
+            <Camera className="w-5 h-5 text-primary" />
             <span className="text-primary font-medium uppercase tracking-widest text-sm">Real Results @milkacollective</span>
-            <Instagram className="w-5 h-5 text-primary" />
+            <Camera className="w-5 h-5 text-primary" />
           </motion.div>
           
           <h2 className="text-4xl md:text-6xl font-light text-foreground mb-6">
@@ -108,8 +192,15 @@ export function InstagramGallery() {
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
               
-              {/* Subtle hover overlay for booking CTA */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+              {/* Image title overlay - always visible */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <span className="text-white font-medium text-sm md:text-base">
+                  {post.title}
+                </span>
+              </div>
+              
+              {/* Hover overlay for booking CTA */}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <span className="relative text-white text-sm font-medium group-hover:after:absolute group-hover:after:content-[''] group-hover:after:block group-hover:after:w-full group-hover:after:h-[2px] group-hover:after:bg-white group-hover:after:mt-1">
                   Book This Look
                 </span>

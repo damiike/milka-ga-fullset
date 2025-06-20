@@ -2,18 +2,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Clock, Users, Sparkles } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
-// Vimeo Player API types
-declare global {
-  interface Window {
-    Vimeo: any;
-  }
-}
-
 interface VideoItem {
   id: number;
-  videoUrl: string;
-  videoType: 'vimeo' | 'youtube' | 'html5';
-  videoId: string;
+  videoFile: string;
   poster: string;
   title: string;
   subtitle: string;
@@ -27,10 +18,8 @@ interface VideoItem {
 const videos: VideoItem[] = [
   {
     id: 1,
-    videoUrl: "https://vimeo.com/1095029463",
-    videoId: "1095029463",
-    videoType: 'vimeo',
-    poster: "https://vumbnail.com/1095029463.jpg",
+    videoFile: "/videos/IMG_5635.mp4",
+    poster: "/photos/IMG_5637.png",
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
@@ -46,10 +35,8 @@ const videos: VideoItem[] = [
   },
   {
     id: 2,
-    videoUrl: "https://vimeo.com/1095029345",
-    videoId: "1095029345",
-    videoType: 'vimeo',
-    poster: "https://vumbnail.com/1095029345.jpg",
+    videoFile: "/videos/IMG_3684.mp4",
+    poster: "/photos/IMG_3723.png",
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
@@ -65,10 +52,8 @@ const videos: VideoItem[] = [
   },
   {
     id: 3,
-    videoUrl: "https://vimeo.com/1095029437",
-    videoId: "1095029437",
-    videoType: 'vimeo',
-    poster: "https://vumbnail.com/1095029437.jpg",
+    videoFile: "/videos/IMG_5254.mp4",
+    poster: "/photos/IMG_5258.png",
     title: "Russian Volume Lash Transformation",
     subtitle: "Maximum Impact for a Show-Stopping Look",
     description: "Experience the ultimate in lash luxury with our Russian volume lashes. Multiple lightweight extensions per natural lash create a dramatic, full look that lasts.",
@@ -89,8 +74,7 @@ function VideoPlayer({ video, isPlaying, onClose }: {
   isPlaying: boolean; 
   onClose: () => void; 
 }) {
-  const playerRef = useRef<HTMLDivElement>(null);
-  const playerInstance = useRef<any>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Handle keyboard events
@@ -107,53 +91,30 @@ function VideoPlayer({ video, isPlaying, onClose }: {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPlaying, onClose]);
 
-  // Load Vimeo API script
+  // Handle video play/pause when modal opens/closes
   useEffect(() => {
-    if (!isPlaying) return;
-
-    const script = document.createElement('script');
-    script.src = 'https://player.vimeo.com/api/player.js';
-    script.async = true;
+    if (!videoRef.current) return;
     
-    script.onload = () => {
-      if (playerRef.current && !playerInstance.current) {
-        playerRef.current.innerHTML = ''; // Clear any existing content
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://player.vimeo.com/video/${video.videoId}?autoplay=1&loop=0&title=0&byline=0&portrait=0&color=ff69b4`;
-        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.style.borderRadius = '0.5rem';
-        
-        playerRef.current.appendChild(iframe);
-        
-        // Initialize the player
-        playerInstance.current = new window.Vimeo.Player(iframe);
-        setIsLoading(false);
-        
-        // Handle player ready
-        playerInstance.current.ready().then(() => {
-          console.log('Vimeo player ready');
-        });
+    if (isPlaying) {
+      videoRef.current.play().catch(error => {
+        console.error('Error playing video:', error);
+      });
+    } else {
+      videoRef.current.pause();
+      if (videoRef.current.currentTime) {
+        videoRef.current.currentTime = 0;
       }
-    };
-
-    document.body.appendChild(script);
+    }
     
-    // Cleanup function
     return () => {
-      if (playerInstance.current) {
-        playerInstance.current.destroy();
-        playerInstance.current = null;
+      if (videoRef.current) {
+        videoRef.current.pause();
+        if (videoRef.current.currentTime) {
+          videoRef.current.currentTime = 0;
+        }
       }
-      if (script.parentNode) {
-        document.body.removeChild(script);
-      }
-      setIsLoading(true);
     };
-  }, [isPlaying, video.videoId]);
+  }, [isPlaying]);
 
   if (!isPlaying) return null;
 
@@ -166,16 +127,27 @@ function VideoPlayer({ video, isPlaying, onClose }: {
         className="relative w-full max-w-4xl mx-auto bg-black rounded-xl overflow-hidden aspect-video"
         onClick={e => e.stopPropagation()}
       >
-        <div 
-          ref={playerRef}
-          className="w-full h-full"
+        <video
+          ref={videoRef}
+          src={video.videoFile}
+          poster={video.poster}
+          className="w-full h-full object-contain"
+          controls
+          playsInline
+          onCanPlay={() => setIsLoading(false)}
+          onError={(e) => {
+            console.error('Error loading video:', e);
+            setIsLoading(false);
+          }}
         >
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-white">Loading video...</div>
-            </div>
-          )}
-        </div>
+          Your browser does not support the video tag.
+        </video>
+        
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div className="text-white">Loading video...</div>
+          </div>
+        )}
         
         <button 
           onClick={onClose}

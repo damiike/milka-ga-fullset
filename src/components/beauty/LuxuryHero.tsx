@@ -3,6 +3,7 @@ import { useSpring, animated } from '@react-spring/web';
 import { Sparkles, Star, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
+import { getImageUrl } from '../../config/assets';
 
 export function LuxuryHero() {
   const { scrollY } = useScroll();
@@ -53,7 +54,7 @@ export function LuxuryHero() {
             className="mb-8 pt-6 sm:pt-0"
           >
             <img 
-              src="/photos/milka-logo.png"
+              src={getImageUrl("photos/milka-logo.png")}
               alt="Milka Collective Logo"
               className="h-16 md:h-20 mx-auto"
             />

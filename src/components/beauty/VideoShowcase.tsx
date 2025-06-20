@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Clock, Users, Sparkles, X } from 'lucide-react';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { getImageUrl } from '../../config/assets';
 
 interface VideoItem {
   id: number;
@@ -21,7 +22,7 @@ const videos: VideoItem[] = [
     id: 1,
     vimeoId: "1095029463",
     vimeoHash: "db83b90006",
-    poster: "/photos/IMG_5637.png",
+    poster: getImageUrl("photos/IMG_5637.png"),
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
@@ -39,7 +40,7 @@ const videos: VideoItem[] = [
     id: 2,
     vimeoId: "1095058528",
     vimeoHash: "890546880c",
-    poster: "/photos/IMG_5382.png",
+    poster: getImageUrl("photos/IMG_5382.png"),
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
@@ -57,7 +58,7 @@ const videos: VideoItem[] = [
     id: 3,
     vimeoId: "1095029437",
     vimeoHash: "a86d6a75e1",
-    poster: "/photos/IMG_5258.png",
+    poster: getImageUrl("photos/IMG_5258.png"),
     title: "Russian Volume Lash Transformation",
     subtitle: "Maximum Impact for a Show-Stopping Look",
     description: "Experience the ultimate in lash luxury with our Russian volume lashes. Multiple lightweight extensions per natural lash create a dramatic, full look that lasts.",

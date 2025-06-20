@@ -148,5 +148,20 @@
     background: linear-gradient(135deg, #fda4af 0%, #fb7185 100%);
   }
   
+  /* Ensure main content containers are visible if JavaScript fails */
+  astro-island > section,
+  astro-island > div[class*="container"],
+  astro-island > div[class*="flex"] {
+    opacity: 1 !important;
+  }
+  
+  /* Only target main text content elements that are completely hidden */
+  astro-island h1[style*="opacity:0"],
+  astro-island h2[style*="opacity:0"],
+  astro-island p[style*="opacity:0"],
+  astro-island div[class*="text-"][style*="opacity:0"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
   
 }

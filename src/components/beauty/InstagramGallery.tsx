@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Camera } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
+import { getImageUrl } from '../../config/assets';
 
 interface InstagramPost {
   id: number;
@@ -13,109 +14,109 @@ interface InstagramPost {
 const posts: InstagramPost[] = [
   {
     id: 1,
-    image: "/photos/IMG_5383.png",
+    image: getImageUrl("photos/IMG_5383.png"),
     caption: "Russian Volume perfection for a bold, dramatic look ✨",
     title: "Russian Volume"
   },
   {
     id: 2,
-    image: "/photos/IMG_4941.jpg",
+    image: getImageUrl("photos/IMG_4941.jpg"),
     caption: "Wet look lashes for a glossy, defined finish",
     title: "Wet Look"
   },
   {
     id: 3,
-    image: "/photos/0C70369B-5DD1-4E6D-ADD6-DD7BACAA1104.JPG",
+    image: getImageUrl("photos/0C70369B-5DD1-4E6D-ADD6-DD7BACAA1104.JPG"),
     caption: "Natural classic set for everyday glam",
     title: "Classic"
   },
   {
     id: 4,
-    image: "/photos/1F35AADC-3C01-48D7-AAE9-52872ECB0860.JPG",
+    image: getImageUrl("photos/1F35AADC-3C01-48D7-AAE9-52872ECB0860.JPG"),
     caption: "The transformation is everything 💕",
     title: "Hybrid"
   },
   {
     id: 5,
-    image: "/photos/5CEDA37A-9CA2-4FEC-AD75-020DDD36610A.JPG",
+    image: getImageUrl("photos/5CEDA37A-9CA2-4FEC-AD75-020DDD36610A.JPG"),
     caption: "Wet look lashes are trending!",
     title: "Classic"
   },
   {
     id: 6,
-    image: "/photos/IMG_4940.jpg",
+    image: getImageUrl("photos/IMG_4940.jpg"),
     caption: "Mega volume for maximum drama ✨",
     title: "Hybrid"
   },
   {
     id: 7,
-    image: "/photos/395376D9-1963-4F81-A73F-A1949D441530.JPG",
+    image: getImageUrl("photos/395376D9-1963-4F81-A73F-A1949D441530.JPG"),
     caption: "Flawless lash extensions ✨",
     title: "Hybrid"
   },
   {
     id: 8,
-    image: "/photos/31544E47-DED2-4D2D-B0E0-487808AA2E0C.JPG",
+    image: getImageUrl("photos/31544E47-DED2-4D2D-B0E0-487808AA2E0C.JPG"),
     caption: "Beautiful lash work ✨",
     title: ""
   },
   {
     id: 9,
-    image: "/photos/IMG_3559.jpg",
+    image: getImageUrl("photos/IMG_3559.jpg"),
     caption: "Stunning lash transformation",
     title: ""
   },
   {
     id: 10,
-    image: "/photos/IMG_3723.png",
+    image: getImageUrl("photos/IMG_3723.png"),
     caption: "Perfect lash application",
     title: ""
   },
   {
     id: 11,
-    image: "/photos/IMG_3821.PNG",
+    image: getImageUrl("photos/IMG_3821.PNG"),
     caption: "Gorgeous lash extensions",
     title: ""
   },
   {
     id: 12,
-    image: "/photos/IMG_4023.PNG",
+    image: getImageUrl("photos/IMG_4023.PNG"),
     caption: "Flawless lash work",
     title: ""
   },
   {
     id: 13,
-    image: "/photos/IMG_4589.PNG",
+    image: getImageUrl("photos/IMG_4589.PNG"),
     caption: "Beautiful lash styling",
     title: ""
   },
   {
     id: 14,
-    image: "/photos/IMG_4655.png",
+    image: getImageUrl("photos/IMG_4655.png"),
     caption: "Perfect lash finish",
     title: ""
   },
   {
     id: 15,
-    image: "/photos/IMG_5010.jpg",
+    image: getImageUrl("photos/IMG_5010.jpg"),
     caption: "Stunning lash design",
     title: ""
   },
   {
     id: 16,
-    image: "/photos/IMG_5119.jpg",
+    image: getImageUrl("photos/IMG_5119.jpg"),
     caption: "Amazing lash transformation",
     title: ""
   },
   {
     id: 17,
-    image: "/photos/IMG_5258.png",
+    image: getImageUrl("photos/IMG_5258.png"),
     caption: "Professional lash work",
     title: ""
   },
   {
     id: 18,
-    image: "/photos/IMG_5637.png",
+    image: getImageUrl("photos/IMG_5637.png"),
     caption: "Expert lash application",
     title: ""
   }

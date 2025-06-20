@@ -274,11 +274,6 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
           <X className="w-5 h-5" />
         </button>
 
-        {/* Video title overlay for context */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6">
-          <h3 className="text-white font-semibold text-lg sm:text-xl">{video.title}</h3>
-          <p className="text-white/80 text-sm sm:text-base">{video.subtitle}</p>
-        </div>
       </motion.div>
     </motion.div>
   );

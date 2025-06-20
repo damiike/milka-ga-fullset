@@ -20,14 +20,33 @@ export default defineConfig({
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom'],
-            animations: ['framer-motion'],
-            icons: ['lucide-react'],
-            utils: ['clsx', 'tailwind-merge']
+          manualChunks: (id) => {
+            // Bundle all vendor libraries together to reduce requests
+            if (id.includes('node_modules')) {
+              // Group all vendor dependencies into a single chunk
+              return 'vendor';
+            }
+            // Group all components into fewer chunks
+            if (id.includes('/components/beauty/')) {
+              return 'components';
+            }
+            if (id.includes('/components/ui/')) {
+              return 'ui';
+            }
+            // Default chunk for everything else
+            return 'main';
           }
         }
-      }
+      },
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true
+        }
+      },
+      // Increase chunk size limit to allow larger bundles (fewer requests)
+      chunkSizeWarningLimit: 1000
     }
   },
   output: 'static',

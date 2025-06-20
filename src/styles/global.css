@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./sprites.css";
 
 @custom-variant dark (&:is(.dark *));
 

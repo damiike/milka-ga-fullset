@@ -63,8 +63,8 @@ const posts: InstagramPost[] = [
   {
     id: 9,
     image: getImageUrl("photos/IMG_3559.jpg"),
-    caption: "Stunning lash transformation",
-    title: ""
+    caption: "Full Russian Volume for maximum drama ✨",
+    title: "Full Russian Volume"
   },
   {
     id: 10,

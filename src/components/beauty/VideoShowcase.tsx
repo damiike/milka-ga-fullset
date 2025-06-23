@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Clock, Users, Sparkles, X } from 'lucide-react';
+import { Play, Sparkles, X } from 'lucide-react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getImageUrl } from '../../config/assets';
 
@@ -11,8 +11,6 @@ interface VideoItem {
   title: string;
   subtitle: string;
   description: string;
-  duration: string;
-  popularity: string;
   highlights: string[];
   technique: 'classic' | 'hybrid' | 'volume';
 }
@@ -26,8 +24,6 @@ const videos: VideoItem[] = [
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
-    duration: "1:15",
-    popularity: "Most Popular",
     highlights: [
       "One extension per natural lash",
       "Natural, defined look",
@@ -44,8 +40,6 @@ const videos: VideoItem[] = [
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",
-    duration: "1:30",
-    popularity: "Trending",
     highlights: [
       "Mix of classic and volume lashes",
       "Fuller, wispy look",
@@ -62,12 +56,10 @@ const videos: VideoItem[] = [
     title: "Russian Volume Lash Transformation",
     subtitle: "Maximum Impact for a Show-Stopping Look",
     description: "Experience the ultimate in lash luxury with our Russian volume lashes. Multiple lightweight extensions per natural lash create a dramatic, full look that lasts.",
-    duration: "2:15",
-    popularity: "New",
     highlights: [
       "Multiple lightweight extensions per lash",
       "Dramatic, full look with a feather-light feel",
-      "Fully customizable density",
+      "Perfect for glamorous events",
       "Lasts 4-6 weeks with proper care"
     ],
     technique: 'volume'
@@ -359,8 +351,6 @@ export const VideoShowcase = () => {
         video_title: video.title,
         video_technique: video.technique,
         video_id: video.vimeoId,
-        video_duration: video.duration,
-        video_popularity: video.popularity,
         event_category: 'Video',
         event_action: 'Play',
         event_label: video.title
@@ -373,8 +363,6 @@ export const VideoShowcase = () => {
         video_title: video.title,
         video_technique: video.technique,
         video_id: video.vimeoId,
-        video_duration: video.duration,
-        video_popularity: video.popularity,
         section: 'video_showcase'
       });
     }
@@ -523,8 +511,17 @@ export const VideoShowcase = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   
-                  {/* Play button overlay - always visible on mobile for better UX */}
-                  <div className="absolute inset-0 bg-black/20 sm:bg-black/30 flex items-center justify-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Light overlay with video indicator - always visible */}
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-[0.5px]">
+                    {/* Small video icon in corner */}
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 flex items-center gap-1">
+                      <Play className="w-3 h-3 text-pink-500" fill="currentColor" />
+                      <span className="text-xs font-medium text-gray-700">VIDEO</span>
+                    </div>
+                  </div>
+
+                  {/* Play button overlay on hover */}
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <motion.div 
                       className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 rounded-full flex items-center justify-center shadow-lg"
                       whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
@@ -535,17 +532,7 @@ export const VideoShowcase = () => {
                     </motion.div>
                   </div>
 
-                  {/* Video duration badge */}
-                  <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                    {video.duration}
-                  </div>
 
-                  {/* Popularity badge */}
-                  {video.popularity && (
-                    <div className="absolute top-3 left-3 bg-pink-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                      {video.popularity}
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -562,16 +549,6 @@ export const VideoShowcase = () => {
                   }}>{video.description}</p>
                 </div>
                 
-                <div className="flex items-center justify-between gap-4 text-sm text-gray-500 mb-4 py-2 bg-gray-50 rounded-lg px-3">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4 text-pink-500" />
-                    <span className="font-medium">{video.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4 text-pink-500" />
-                    <span className="font-medium">{video.popularity}</span>
-                  </div>
-                </div>
                 
                 {video.highlights && video.highlights.length > 0 && (
                   <div className="mb-6">
@@ -583,11 +560,6 @@ export const VideoShowcase = () => {
                           <span className="text-gray-700 leading-relaxed">{highlight}</span>
                         </li>
                       ))}
-                      {video.highlights.length > 3 && (
-                        <li className="text-xs text-gray-500 pl-6">
-                          +{video.highlights.length - 3} more benefits
-                        </li>
-                      )}
                     </ul>
                   </div>
                 )}

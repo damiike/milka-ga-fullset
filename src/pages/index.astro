@@ -85,6 +85,38 @@ function generateStars(rating: number): string {
 >
   <LuxuryHero client:load />
   
+  <!-- Mobile-only info card underneath the fold -->
+  <section class="py-8 bg-gradient-to-b from-pink-50 to-white block md:hidden">
+    <div class="container mx-auto px-6">
+      <div class="bg-white rounded-2xl p-6 shadow-xl border border-pink-100 max-w-md mx-auto">
+        <div class="text-center">
+          <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+            Wake up beautiful every day with luxurious lash extensions crafted by Brighton's most experienced artists
+          </p>
+          
+          <div class="space-y-3 text-sm text-gray-600">
+            <div class="flex items-center justify-center gap-2">
+              <span class="text-lg">⭐</span>
+              <span class="font-medium text-pink-600">Over 95 5-Star Google Verified Reviews</span>
+            </div>
+            
+            <div class="border-t border-pink-100 pt-3">
+              <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="text-lg">⏰</span>
+                <span class="text-center">Mon-Thu 10am-8pm • Fri 10am-5pm • Sat 10am-4pm</span>
+              </div>
+              
+              <div class="flex items-center justify-center gap-2">
+                <span class="text-lg">📍</span>
+                <span>2/229 Bay St, Brighton</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
   <ServiceShowcase client:load />
   
   <VideoShowcase client:visible />

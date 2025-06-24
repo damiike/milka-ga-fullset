@@ -23,9 +23,11 @@ export function LuxuryHero() {
   });
 
   return (
-    <section className="relative min-h-screen overflow-hidden premium-gradient">
-      {/* Static gradient background */}
-      <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-primary/30 to-transparent" />
+    <section className="relative h-screen sm:min-h-screen overflow-hidden sm:premium-gradient">
+      {/* Mobile background - solid color, fully contained */}
+      <div className="absolute inset-0 sm:hidden bg-gradient-to-b from-pink-50 to-white"></div>
+      {/* Static gradient background - Desktop only */}
+      <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-primary/30 to-transparent hidden sm:block" />
       
       {/* Floating sparkle elements */}
       <animated.div style={sparkleAnimation} className="absolute top-20 left-10 text-primary opacity-40">
@@ -39,7 +41,7 @@ export function LuxuryHero() {
       </animated.div>
 
       <div className="relative">
-        <div className="container mx-auto px-6 relative z-10 min-h-screen flex items-center justify-center py-16 sm:py-24">
+        <div className="container mx-auto px-6 relative z-10 h-screen sm:min-h-screen flex items-start sm:items-center justify-center py-8 sm:py-24">
           <motion.div 
             className="flex flex-col items-center justify-center w-full text-center relative"
             initial={{ opacity: 0, y: 30 }}
@@ -51,7 +53,7 @@ export function LuxuryHero() {
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-8 pt-6 sm:pt-0"
+            className="mb-8 pt-4 sm:pt-0"
           >
             <img 
               src={getImageUrl("photos/milka-logo.png")}
@@ -104,12 +106,12 @@ export function LuxuryHero() {
             </motion.h1>
           </div>
 
-          {/* Subheadline */}
+          {/* Subheadline - Hidden on mobile */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl font-light"
+            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl font-light hidden md:block"
           >
             Wake up beautiful every day with luxurious lash extensions 
             crafted by Brighton's most experienced artists
@@ -120,7 +122,7 @@ export function LuxuryHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 mb-12"
+            className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-12"
           >
             <motion.a
               href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
@@ -177,14 +179,34 @@ export function LuxuryHero() {
               <Phone className="w-5 h-5" />
               <span className="text-lg">Call 0480 095 789</span>
             </motion.a>
+            
+            {/* Scroll indicator - Mobile only, positioned in button group */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+              className="flex justify-center sm:hidden mt-1"
+            >
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center"
+              >
+                <motion.div
+                  animate={{ y: [0, 15, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="w-1 h-3 bg-primary rounded-full mt-2"
+                />
+              </motion.div>
+            </motion.div>
           </motion.div>
 
-          {/* Trust indicators with animation */}
+          {/* Trust indicators with animation - Hidden on mobile */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.8 }}
-            className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground pb-6 sm:pb-0"
+            className="hidden md:flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground pb-6 sm:pb-0"
           >
             <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto px-4 sm:px-0">
               <div className="flex -space-x-1">
@@ -217,12 +239,12 @@ export function LuxuryHero() {
             </div>
             </motion.div>
             
-            {/* Scroll indicator */}
+            {/* Scroll indicator - Desktop only */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2 }}
-              className="absolute -bottom-8 sm:-bottom-12 left-1/2 transform -translate-x-1/2 z-10"
+              className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 z-10 hidden sm:block"
             >
               <motion.div
                 animate={{ y: [0, 10, 0] }}
@@ -240,14 +262,14 @@ export function LuxuryHero() {
         </div>
       </div>
 
-      {/* Decorative blur circles */}
+      {/* Decorative blur circles - Desktop only */}
       <motion.div
         style={{ y: parallaxY }}
-        className="absolute -top-40 -right-40 w-96 h-96 bg-primary rounded-full filter blur-3xl opacity-20"
+        className="absolute -top-40 -right-40 w-96 h-96 bg-primary rounded-full filter blur-3xl opacity-20 hidden sm:block"
       />
       <motion.div
         style={{ y: parallaxY }}
-        className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent rounded-full filter blur-3xl opacity-20"
+        className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent rounded-full filter blur-3xl opacity-20 hidden sm:block"
       />
     </section>
   );

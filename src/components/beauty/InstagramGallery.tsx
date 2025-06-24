@@ -16,7 +16,7 @@ const posts: InstagramPost[] = [
     id: 1,
     image: getImageUrl("photos/IMG_5383.png"),
     caption: "Russian Volume perfection for a bold, dramatic look ✨",
-    title: "Russian Volume"
+    title: "Hybrid"
   },
   {
     id: 2,
@@ -58,67 +58,67 @@ const posts: InstagramPost[] = [
     id: 8,
     image: getImageUrl("photos/31544E47-DED2-4D2D-B0E0-487808AA2E0C.JPG"),
     caption: "Beautiful lash work ✨",
-    title: ""
+    title: "Hybrid"
   },
   {
     id: 9,
     image: getImageUrl("photos/IMG_3559.jpg"),
     caption: "Full Russian Volume for maximum drama ✨",
-    title: "Full Russian Volume"
+    title: "Full Russian Vol"
   },
   {
     id: 10,
     image: getImageUrl("photos/IMG_3723.png"),
     caption: "Perfect lash application",
-    title: ""
+    title: "Russian Volume"
   },
   {
     id: 11,
     image: getImageUrl("photos/IMG_3821.PNG"),
     caption: "Gorgeous lash extensions",
-    title: ""
+    title: "Wet Look"
   },
   {
     id: 12,
     image: getImageUrl("photos/IMG_4023.PNG"),
     caption: "Flawless lash work",
-    title: ""
+    title: "Russian Volume"
   },
   {
     id: 13,
     image: getImageUrl("photos/IMG_4589.PNG"),
     caption: "Beautiful lash styling",
-    title: ""
+    title: "Classic"
   },
   {
     id: 14,
     image: getImageUrl("photos/IMG_4655.png"),
     caption: "Perfect lash finish",
-    title: ""
+    title: "Classic"
   },
   {
     id: 15,
     image: getImageUrl("photos/IMG_5010.jpg"),
     caption: "Stunning lash design",
-    title: ""
+    title: "Classic"
   },
   {
     id: 16,
     image: getImageUrl("photos/IMG_5119.jpg"),
     caption: "Amazing lash transformation",
-    title: ""
+    title: "Light Russian Volume"
   },
   {
     id: 17,
     image: getImageUrl("photos/IMG_5258.png"),
     caption: "Professional lash work",
-    title: ""
+    title: "Russian Volume"
   },
   {
     id: 18,
     image: getImageUrl("photos/IMG_5637.png"),
     caption: "Expert lash application",
-    title: ""
+    title: "Classic"
   }
 ];
 

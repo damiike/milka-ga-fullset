@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Sparkles, X } from 'lucide-react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getImageUrl } from '../../config/assets';
+import { useConfetti } from '../../hooks/useConfetti';
 
 interface VideoItem {
   id: number;
@@ -277,6 +278,7 @@ export const VideoShowcase = () => {
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hasTrackedView, setHasTrackedView] = useState(false);
+  const { triggerConfetti } = useConfetti();
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -397,6 +399,9 @@ export const VideoShowcase = () => {
   }, [selectedVideo]);
 
   const handleBookNow = useCallback((technique: string, videoTitle: string) => {
+    // Trigger confetti animation
+    triggerConfetti();
+    
     // Enhanced GTM tracking
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
@@ -435,7 +440,7 @@ export const VideoShowcase = () => {
     
     // Redirect to booking with analytics
     window.location.href = 'https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926';
-  }, []);
+  }, [triggerConfetti]);
 
   return (
     <section 
@@ -488,7 +493,7 @@ export const VideoShowcase = () => {
               whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
               transition={prefersReducedMotion ? {} : { delay: index * 0.15, duration: 0.6 }}
               viewport={{ once: true, margin: "-50px" }}
-              className="bg-white rounded-2xl overflow-hidden shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-300 group"
+              className="bg-white rounded-2xl overflow-hidden shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-300 group flex flex-col h-full"
             >
               {/* Video Thumbnail */}
               <div className="relative aspect-square overflow-hidden">
@@ -511,24 +516,22 @@ export const VideoShowcase = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   
-                  {/* Light overlay with video indicator - always visible */}
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-[0.5px]">
-                    {/* Small video icon in corner */}
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 flex items-center gap-1">
-                      <Play className="w-3 h-3 text-pink-500" fill="currentColor" />
-                      <span className="text-xs font-medium text-gray-700">VIDEO</span>
+                  {/* Light overlay with centered play button - always visible */}
+                  <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px] flex items-center justify-center">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/20">
+                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 ml-1" fill="currentColor" />
                     </div>
                   </div>
 
-                  {/* Play button overlay on hover */}
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Enhanced hover overlay */}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <motion.div 
-                      className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 rounded-full flex items-center justify-center shadow-lg"
+                      className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-pink-200"
                       whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
                       whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
-                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 ml-1" fill="currentColor" />
+                      <Play className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500 ml-1" fill="currentColor" />
                     </motion.div>
                   </div>
 
@@ -537,21 +540,18 @@ export const VideoShowcase = () => {
               </div>
 
               {/* Video Info */}
-              <div className="p-4 sm:p-6">
+              <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                {/* Title and Description Section - Fixed Heights */}
                 <div className="mb-4">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 leading-tight">{video.title}</h3>
-                  <p className="text-pink-600 font-medium mb-3 text-sm sm:text-base">{video.subtitle}</p>
-                  <p className="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed" style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden'
-                  }}>{video.description}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 leading-tight min-h-[3rem]">{video.title}</h3>
+                  <p className="text-pink-600 font-medium mb-3 text-sm sm:text-base min-h-[1.5rem]">{video.subtitle}</p>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed">{video.description}</p>
                 </div>
                 
                 
+                {/* Key Benefits Section - Flexible Height */}
                 {video.highlights && video.highlights.length > 0 && (
-                  <div className="mb-6">
+                  <div className="mb-6 flex-grow">
                     <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Key Benefits:</h4>
                     <ul className="space-y-2">
                       {video.highlights.slice(0, 3).map((highlight, index) => (
@@ -564,9 +564,11 @@ export const VideoShowcase = () => {
                   </div>
                 )}
                 
+                {/* Button Section - Always at Bottom */}
+                
                 <motion.button
                   onClick={() => handleBookNow(video.technique, video.title)}
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 sm:py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation text-sm sm:text-base"
+                  className="w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 sm:py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation text-sm sm:text-base cursor-pointer mt-auto"
                   whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                   whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                   style={{ minHeight: '44px' }} // WCAG touch target size

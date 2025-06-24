@@ -98,9 +98,9 @@ export function WhyChooseUs() {
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              className="group"
+              className="group h-full"
             >
-              <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border border-pink-100">
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all border border-pink-100 h-full flex flex-col">
                 {/* Icon */}
                 <motion.div
                   whileHover={{ rotate: 360, scale: 1.1 }}
@@ -110,9 +110,11 @@ export function WhyChooseUs() {
                   <reason.icon className="w-8 h-8 text-white" />
                 </motion.div>
                 
-                {/* Content */}
-                <h3 className="text-xl font-medium text-gray-900 mb-3">{reason.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{reason.description}</p>
+                {/* Content - Flexible Height */}
+                <div className="flex-grow">
+                  <h3 className="text-xl font-medium text-gray-900 mb-3 min-h-[3rem] leading-tight">{reason.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{reason.description}</p>
+                </div>
                 
                 {/* Hover decoration */}
                 <motion.div

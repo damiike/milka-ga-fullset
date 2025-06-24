@@ -181,7 +181,7 @@ export function ServiceShowcase() {
                 transition={{ delay: index * 0.1 }}
                 onMouseEnter={() => setHoveredCard(item.name)}
                 onMouseLeave={() => setHoveredCard(null)}
-                className="relative pt-4"
+                className="relative pt-4 h-full"
               >
                 {/* Popular badge */}
                 {item.popular && (
@@ -197,15 +197,19 @@ export function ServiceShowcase() {
                 
                 <motion.div
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className={`relative bg-card rounded-2xl luxury-shadow luxury-border transition-all ${
+                  className={`relative bg-card rounded-2xl luxury-shadow luxury-border transition-all h-full flex flex-col ${
                     item.popular ? 'border-primary/30' : ''
                   }`}
                 >
 
-                  <div className="p-8">
-                    <h3 className="text-2xl font-medium text-foreground mb-3">{item.name}</h3>
+                  <div className="p-8 flex flex-col h-full">
+                    {/* Title Section - Fixed Height */}
+                    <div className="mb-3">
+                      <h3 className="text-2xl font-medium text-foreground min-h-[3rem] leading-tight">{item.name}</h3>
+                    </div>
                   
-                  <div className="flex items-center gap-4 mb-4 text-muted-foreground">
+                  {/* Price and Duration Section - Fixed Height */}
+                  <div className="flex items-center gap-4 mb-4 text-muted-foreground min-h-[2.5rem]">
                     <div className="flex items-center gap-1">
                       <DollarSign className="w-4 h-4 text-primary" />
                       <span className="font-semibold text-2xl text-foreground">{item.price.replace('$', '')}</span>
@@ -217,7 +221,12 @@ export function ServiceShowcase() {
                     </div>
                   </div>
 
-                  <p className="text-muted-foreground leading-relaxed mb-6">{item.description}</p>
+                  {/* Description Section - Flexible Height */}
+                  <div className="flex-grow mb-6">
+                    <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                  </div>
+
+                  {/* Button Section - Always at Bottom */}
 
                   <motion.a
                     href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
@@ -239,7 +248,7 @@ export function ServiceShowcase() {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`block w-full py-3 rounded-full font-medium transition-all text-center ${
+                    className={`block w-full py-3 rounded-full font-medium transition-all text-center cursor-pointer mt-auto ${
                       hoveredCard === item.name
                         ? 'bg-gradient-to-r from-primary to-accent text-primary-foreground luxury-shadow'
                         : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'

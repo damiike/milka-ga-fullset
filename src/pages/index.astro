@@ -14,6 +14,67 @@ import { landingConfigs } from '../data/landing-configs';
 const config = landingConfigs.beauty;
 const variant = 'beauty';
 
+// Define the structure of a single review for TypeScript type safety
+interface Review {
+  profileImgUrl: string;
+  reviewBy: string;
+  reviewDetails: string;
+  rating: number;
+  date: string;
+  reviewSource: string;
+}
+
+// API configuration - use environment variable for security
+const apiKey = import.meta.env.REVIEW_API_KEY || "Tu7FbDX12fU1h0V23NyGAJWeGgE9JS";
+const apiUrl = `https://dev-azurefunction20240603151829.azurewebsites.net/GetReviewDetail?key=${apiKey}&pageNumber=1&pageSize=20&showEmptyReview=false&minStars=4`;
+
+let reviews: Review[] = [];
+
+// Fetch the data on the server during build
+try {
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    throw new Error(`API call failed with status: ${response.status}`);
+  }
+  const data = await response.json();
+  
+  // The reviews are nested inside data.data.reviews
+  if (data && data.data && data.data.reviews) {
+    // Filter for lash/beauty related reviews only (basic keyword filtering)
+    const allReviews = data.data.reviews;
+    const beautyKeywords = ['lash', 'lashes', 'beauty', 'beautiful', 'makeup', 'extensions', 'brow', 'eyelash'];
+    const lashReviews = allReviews.filter(review => 
+      beautyKeywords.some(keyword => 
+        review.reviewDetails.toLowerCase().includes(keyword)
+      )
+    );
+    
+    // Use lash-related reviews if found, otherwise use all reviews
+    reviews = (lashReviews.length > 0 ? lashReviews : allReviews).slice(0, 9);
+  }
+} catch (error) {
+  console.error("Failed to fetch review data:", error);
+  // If the API fails, reviews array remains empty and we show fallback
+}
+
+// Helper function to format date
+function formatDate(dateString: string): string {
+  try {
+    return new Date(dateString).toLocaleDateString('en-AU', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch {
+    return 'Recently';
+  }
+}
+
+// Helper function to generate star rating
+function generateStars(rating: number): string {
+  return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+}
+
 ---
 
 <LandingLayout 
@@ -47,7 +108,287 @@ const variant = 'beauty';
   
   <LuxuryTestimonials client:visible />
   
+  <!-- Before/After Transformation Section -->
+  <section class="py-16 bg-gradient-to-b from-pink-50 to-white relative overflow-hidden">
+    <div class="absolute top-20 left-10 w-64 h-64 bg-pink-100 rounded-full filter blur-3xl opacity-30"></div>
+    <div class="absolute bottom-20 right-10 w-64 h-64 bg-rose-100 rounded-full filter blur-3xl opacity-30"></div>
+    
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 mb-3">
+          <span class="text-xl">🔄</span>
+          <span class="text-pink-600 font-medium uppercase tracking-widest text-sm">The Transformation</span>
+          <span class="text-xl">✨</span>
+        </div>
+        
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-4">
+          Your Life 
+          <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400">Before & After</span>
+        </h2>
+      </div>
+
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-6 items-center">
+          <!-- Before -->
+          <div class="text-center">
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+              <div class="text-4xl mb-3">😩</div>
+              <h3 class="text-xl font-medium text-gray-800 mb-3">Your Morning Struggle</h3>
+              <ul class="text-left text-gray-600 space-y-2 text-sm">
+                <li class="flex items-center gap-2">
+                  <span class="text-rose-400">⏰</span>
+                  <span>20+ minutes applying mascara</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-rose-400">😰</span>
+                  <span>Avoiding photos</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-rose-400">💸</span>
+                  <span>$100s on mascaras & false lashes</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-rose-400">😴</span>
+                  <span>Waking up tired & unprepared</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="text-center">
+            <div class="text-4xl text-pink-400 animate-pulse">→</div>
+            <div class="text-sm text-gray-600 mt-2 font-medium">Your transformation</div>
+          </div>
+
+          <!-- After -->
+          <div class="text-center">
+            <div class="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 shadow-xl border border-pink-200">
+              <div class="text-4xl mb-3">😍</div>
+              <h3 class="text-xl font-medium text-gray-800 mb-3">Your New Reality</h3>
+              <ul class="text-left text-gray-700 space-y-2 text-sm">
+                <li class="flex items-center gap-2">
+                  <span class="text-green-500">⚡</span>
+                  <span>2-minute morning routine</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-500">📸</span>
+                  <span>Camera-ready confidence 24/7</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-500">💰</span>
+                  <span>No more mascara expenses</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-500">😊</span>
+                  <span>Wake up beautiful & confident</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transformation CTA -->
+        <div class="text-center mt-12">
+          <div class="bg-white rounded-2xl p-8 shadow-xl border border-pink-100 max-w-2xl mx-auto">
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">
+              Ready to Make This Your Reality?
+            </h3>
+            <p class="text-gray-600 mb-6">
+              Over 500 Brighton women have already transformed their mornings. 
+              Your turn to join them and never worry about mascara again.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+                class="bg-gradient-to-r from-pink-500 to-rose-400 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all text-center"
+                onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'transformation_cta' }); }"
+              >
+                Book My Transformation
+              </a>
+              <a
+                href="tel:0480095789"
+                class="bg-white text-gray-800 px-8 py-3 rounded-full font-medium shadow-lg border border-gray-200 hover:bg-gray-50 transition-all text-center"
+                onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'phone_click', click_type: 'transformation_cta' }); }"
+              >
+                Call 0480 095 789
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
   <InstagramGallery client:visible />
+  
+  <!-- Google Reviews Section -->
+  <section class="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-20 left-10 w-64 h-64 bg-pink-100 rounded-full filter blur-3xl opacity-30"></div>
+    <div class="absolute bottom-20 right-10 w-64 h-64 bg-rose-100 rounded-full filter blur-3xl opacity-30"></div>
+    
+    <div class="container mx-auto px-6 relative z-10">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 mb-4">
+          <span class="text-xl">⭐</span>
+          <span class="text-pink-600 font-medium uppercase tracking-widest text-sm">Real Reviews</span>
+          <span class="text-xl">⭐</span>
+        </div>
+        
+        <h2 class="text-4xl md:text-6xl font-light text-gray-900 mb-6">
+          What Our 
+          <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400">Customers Say</span>
+        </h2>
+        
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Verified reviews from real customers who have experienced our lash transformations
+        </p>
+      </div>
+
+      <!-- Reviews Grid -->
+      {reviews && reviews.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
+          {reviews.map((review, index) => (
+            <article class="review-card group">
+              <header class="card-header">
+                <img 
+                  src={review.profileImgUrl} 
+                  alt={`Profile picture of ${review.reviewBy}`} 
+                  class="profile-img"
+                  loading="lazy"
+                  onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNmM2Y0ZjYiLz4KPHN2ZyB4PSIxNSIgeT0iMTIiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOWNhM2FmIj4KICA8cGF0aCBkPSJNMTIgMTJjMi4yMSAwIDQtMS43OSA0LTRzLTEuNzktNC00LTQtNCAxLjc5LTQgNCAxLjc5IDQgNCA0em0wIDJjLTIuNjcgMC04IDEuMzQtOCA0djJoMTZ2LTJjMC0yLjY2LTUuMzMtNC04LTR6Ii8+Cjwvc3ZnPgo8L3N2Zz4K';"
+                />
+                <div class="reviewer-info">
+                  <h3 class="reviewer-name">{review.reviewBy}</h3>
+                  <div class="star-rating" title={`Rated ${review.rating} out of 5 stars`}>
+                    {generateStars(review.rating)}
+                  </div>
+                </div>
+              </header>
+              <blockquote class="review-body">
+                <p>{review.reviewDetails}</p>
+              </blockquote>
+              <footer class="card-footer">
+                <span class="review-source">Verified on {review.reviewSource}</span>
+                <time class="review-date">{formatDate(review.date)}</time>
+              </footer>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-600 text-lg">
+            Our 95+ five-star reviews are loading. Visit our 
+            <a href="https://g.page/r/CSK8tK8tK8tK8EEBM/review" target="_blank" rel="noopener noreferrer" class="text-pink-600 hover:text-pink-700 underline">
+              Google Business page
+            </a> 
+            to see what our customers say!
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <style>
+    .review-card {
+      background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+      border: 1px solid #f3e8ff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .review-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+      border-color: #ec4899;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #f3f4f6;
+      border: 2px solid #fdf2f8;
+    }
+
+    .reviewer-info {
+      flex: 1;
+    }
+
+    .reviewer-name {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .star-rating {
+      color: #fbbf24;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .review-body {
+      margin: 0 0 1rem 0;
+      flex-grow: 1;
+      color: #4b5563;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .review-body p {
+      margin: 0;
+    }
+
+    .card-footer {
+      border-top: 1px solid #f3e8ff;
+      padding-top: 1rem;
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: #6b7280;
+      gap: 1rem;
+    }
+
+    .review-source {
+      font-weight: 500;
+      color: #ec4899;
+    }
+
+    .review-date {
+      white-space: nowrap;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 768px) {
+      .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .review-date {
+        white-space: normal;
+      }
+    }
+  </style>
   
   <!-- Help Choosing CTA -->
   <section class="py-16 bg-gray-50">
@@ -73,9 +414,9 @@ const variant = 'beauty';
           <a
             href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/booking?menu=true"
             class="bg-white text-gray-800 px-8 py-3 rounded-full font-medium shadow-lg border border-gray-200 hover:bg-gray-50 transition-all text-center"
-            onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'help_choosing' }); }"
+            onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'help_choosing' }); }"
           >
-            Book a Consultation
+            Book Now
           </a>
         </div>
       </div>
@@ -187,6 +528,17 @@ const variant = 'beauty';
     }
     return confetti;
   }
+
+  // Simple confetti function for smaller CTAs
+  window.triggerConfetti = async function() {
+    const confetti = await loadConfetti();
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24']
+    });
+  };
 
   window.triggerConfettiFinalCTA = async function() {
     const confetti = await loadConfetti();

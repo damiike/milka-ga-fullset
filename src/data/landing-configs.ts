@@ -1,3 +1,5 @@
+import { bookingConfig } from '../config/booking';
+
 export interface Feature {
   icon: string;
   title: string;
@@ -139,7 +141,7 @@ export const landingConfigs = {
           "Lasts 2-3 weeks"
         ],
         ctaText: "Book Classic Set",
-        ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+        ctaUrl: bookingConfig.bookingUrl
       },
       {
         name: "Volume Sets",
@@ -154,7 +156,7 @@ export const landingConfigs = {
           "Long-lasting results"
         ],
         ctaText: "Book Volume Set",
-        ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+        ctaUrl: bookingConfig.bookingUrl
       },
       {
         name: "Specialty Sets",
@@ -170,7 +172,7 @@ export const landingConfigs = {
         ],
         highlighted: true,
         ctaText: "Book Specialty",
-        ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+        ctaUrl: bookingConfig.bookingUrl
       },
       {
         name: "Add-Ons",
@@ -185,7 +187,7 @@ export const landingConfigs = {
           "Complimentary consultation"
         ],
         ctaText: "View Add-Ons",
-        ctaUrl: "https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+        ctaUrl: bookingConfig.bookingUrl
       }
     ],
     

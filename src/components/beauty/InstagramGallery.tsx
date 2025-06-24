@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Camera } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
+import { bookingConfig } from '../../config/booking';
 
 interface InstagramPost {
   id: number;
@@ -163,7 +164,7 @@ export function InstagramGallery() {
           {posts.map((post, index) => (
             <motion.a
               key={post.id}
-              href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+              href={bookingConfig.bookingUrl}
               onClick={() => {
                 // Trigger confetti animation
                 triggerConfetti();

@@ -3,6 +3,7 @@ import { Play, Sparkles, X } from 'lucide-react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getImageUrl } from '../../config/assets';
 import { useConfetti } from '../../hooks/useConfetti';
+import { bookingConfig } from '../../config/booking';
 
 interface VideoItem {
   id: number;
@@ -129,8 +130,20 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Enhanced keyboard and touch event handling
   useEffect(() => {
@@ -191,8 +204,8 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
 
   if (!isPlaying) return null;
 
-  // Enhanced Vimeo URL with mobile optimizations
-  const vimeoEmbedUrl = `https://player.vimeo.com/video/${video.vimeoId}?h=${video.vimeoHash}&autoplay=1&title=0&byline=0&portrait=0&badge=0&dnt=1&muted=1&playsinline=1&responsive=1`;
+  // Enhanced Vimeo URL with mobile optimizations and portrait support
+  const vimeoEmbedUrl = `https://player.vimeo.com/video/${video.vimeoId}?h=${video.vimeoHash}&autoplay=1&title=0&byline=0&portrait=0&badge=0&dnt=1&muted=1&playsinline=1&responsive=1&autopause=0&background=0${isMobile ? '&controls=1' : ''}`;
 
   return (
     <motion.div
@@ -210,11 +223,12 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
-        className="relative w-full max-w-5xl mx-auto bg-black rounded-xl sm:rounded-2xl overflow-hidden"
+        className="relative w-full mx-auto bg-black rounded-xl sm:rounded-2xl overflow-hidden"
         style={{ 
-          aspectRatio: '16/9',
+          aspectRatio: isMobile ? '9/16' : '16/9',
           maxHeight: '90vh',
-          maxWidth: '95vw'
+          maxWidth: isMobile ? '400px' : '1200px',
+          width: isMobile ? '90vw' : '95vw'
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -227,6 +241,7 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
+            style={{ objectFit: 'contain' }}
             title={video.title}
             loading="lazy"
             onLoad={() => setIsLoading(false)}
@@ -439,7 +454,7 @@ export const VideoShowcase = () => {
     }
     
     // Redirect to booking with analytics
-    window.location.href = 'https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926';
+    window.location.href = bookingConfig.bookingUrl;
   }, [triggerConfetti]);
 
   return (

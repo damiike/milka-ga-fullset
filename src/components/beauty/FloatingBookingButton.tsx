@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
+import { bookingConfig } from '../../config/booking';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -40,7 +41,7 @@ export function FloatingBookingButton() {
     }
     
     // Redirect to booking page
-    window.location.href = 'https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926';
+    window.location.href = bookingConfig.bookingUrl;
   };
 
   return (

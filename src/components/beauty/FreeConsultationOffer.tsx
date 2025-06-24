@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Gift, CheckCircle, Sparkles } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
+import { bookingConfig } from '../../config/booking';
 
 export function FreeConsultationOffer() {
   const { triggerConfetti } = useConfetti();
@@ -65,7 +66,7 @@ export function FreeConsultationOffer() {
         {/* Value proposition */}
         <div className="text-center">
           <motion.a
-            href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+            href={bookingConfig.bookingUrl}
             onClick={() => {
               // Trigger confetti animation
               triggerConfetti();
@@ -99,7 +100,7 @@ export function FreeConsultationBadge() {
 
   return (
     <motion.a
-      href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+      href={bookingConfig.bookingUrl}
       onClick={() => {
         // Trigger confetti animation
         triggerConfetti();

@@ -4,6 +4,7 @@ import { Sparkles, Star, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
+import { bookingConfig } from '../../config/booking';
 
 export function LuxuryHero() {
   const { scrollY } = useScroll();
@@ -125,7 +126,7 @@ export function LuxuryHero() {
             className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-12"
           >
             <motion.a
-              href="https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-m4vife5o/all-offer?menu=true&pId=1089926"
+              href={bookingConfig.bookingUrl}
               onClick={() => {
                 // Trigger confetti animation
                 triggerConfetti();

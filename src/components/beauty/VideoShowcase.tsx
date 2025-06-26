@@ -36,9 +36,9 @@ const videos: VideoItem[] = [
   },
   {
     id: 2,
-    vimeoId: "1095058528",
-    vimeoHash: "890546880c",
-    poster: getImageUrl("photos/IMG_5382.png"),
+    vimeoId: "1096479714",
+    vimeoHash: "0c6e781285",
+    poster: getImageUrl("photos/IMG_5383.png"),
     title: "Hybrid Lash Transformation", 
     subtitle: "The Perfect Balance of Natural & Glamorous",
     description: "Discover why hybrid lashes are our most requested service. Combining classic and volume techniques for fuller lashes that still look naturally beautiful.",

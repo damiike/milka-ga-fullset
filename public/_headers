@@ -1,0 +1,81 @@
+/*
+  # Security headers
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# JavaScript files - compressible
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# CSS files - compressible
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# Images
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# Videos
+/*.mp4
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.mov
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# Fonts
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# Text files
+/*.txt
+  Cache-Control: public, max-age=3600
+  Expires: Thu, 27 Jun 2025 01:00:00 GMT
+
+/*.json
+  Cache-Control: public, max-age=3600
+  Expires: Thu, 27 Jun 2025 01:00:00 GMT
+
+/*.xml
+  Cache-Control: public, max-age=3600
+  Expires: Thu, 27 Jun 2025 01:00:00 GMT
+
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+  Expires: Thu, 31 Dec 2025 23:59:59 GMT
+
+# HTML files
+/*.html
+  Cache-Control: public, max-age=300
+  Expires: Thu, 26 Jun 2025 18:00:00 GMT
+
+# Root index
+/
+  Cache-Control: public, max-age=300
+  Expires: Thu, 26 Jun 2025 18:00:00 GMT

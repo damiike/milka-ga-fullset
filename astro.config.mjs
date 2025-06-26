@@ -2,13 +2,34 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
+import compression from 'vite-plugin-compression';
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   integrations: [react()],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      // Gzip compression
+      compression({
+        algorithm: 'gzip',
+        ext: '.gz',
+        filter: /\.(js|css|html|svg|json|txt|xml)$/,
+        threshold: 1024,
+        deleteOriginFile: false,
+        verbose: false
+      }),
+      // Brotli compression (better compression than gzip)
+      compression({
+        algorithm: 'brotliCompress',
+        ext: '.br',
+        filter: /\.(js|css|html|svg|json|txt|xml)$/,
+        threshold: 1024,
+        deleteOriginFile: false,
+        verbose: false
+      })
+    ],
     server: {
       fs: {
         allow: ['..']
@@ -43,11 +64,22 @@ export default defineConfig({
       terserOptions: {
         compress: {
           drop_console: true,
-          drop_debugger: true
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.warn'],
+          passes: 2
+        },
+        mangle: {
+          safari10: true
         }
       },
+      // Enable source maps for debugging but compressed
+      sourcemap: false,
       // Increase chunk size limit to allow larger bundles (fewer requests)
-      chunkSizeWarningLimit: 1000
+      chunkSizeWarningLimit: 1000,
+      // Enable asset inlining for small files
+      assetsInlineLimit: 4096,
+      // CSS optimization
+      cssMinify: true
     }
   }
 });

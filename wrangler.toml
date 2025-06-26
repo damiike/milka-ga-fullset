@@ -1,0 +1,40 @@
+name = "milka-gafullset"
+compatibility_date = "2024-06-25"
+pages_build_output_dir = "dist"
+
+[build]
+command = "npm run build"
+
+[build.environment_variables]
+NODE_VERSION = "18"
+
+# Environment variables for production
+[env.production.vars]
+# These will be set in CF Pages dashboard
+STATIC_DOMAIN = "static.milkacollective.com.au"
+
+# Optimization settings
+[pages.options]
+# Enable additional compression
+compress = true
+
+# Custom rules for better caching and compression
+[[pages.rules]]
+condition = "PathMatches(\"/photos/*\")"
+action = "AddHeaders"
+headers = { "Cache-Control" = "public, max-age=31536000, immutable" }
+
+[[pages.rules]]
+condition = "PathMatches(\"/_astro/*\")"
+action = "AddHeaders"
+headers = { "Cache-Control" = "public, max-age=31536000, immutable" }
+
+[[pages.rules]]
+condition = "PathMatches(\"*.js\")"
+action = "AddHeaders"
+headers = { "Cache-Control" = "public, max-age=31536000, immutable" }
+
+[[pages.rules]]
+condition = "PathMatches(\"*.css\")"
+action = "AddHeaders"  
+headers = { "Cache-Control" = "public, max-age=31536000, immutable" }

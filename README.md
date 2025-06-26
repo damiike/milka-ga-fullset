@@ -193,3 +193,5 @@ npm run build
 - Wispy Add-On - $20
 
 Built with ❤️ for Milka Collective - Because Life's Too Short for Short Lashes!
+
+<!-- Deployment trigger -->

@@ -6,8 +6,16 @@ export function getImageUrl(imagePath: string): string {
   // Remove leading slash if present
   const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
   
-  // Use static subdomain for cookie-free asset serving
-  return `https://static.milkacollective.com.au/${cleanPath}`;
+  // Use environment variable for static domain, fallback to relative path for CF Pages
+  const staticDomain = import.meta.env.STATIC_DOMAIN;
+  
+  if (staticDomain && staticDomain !== '') {
+    // Use configured static domain
+    return `${staticDomain}/${cleanPath}`;
+  }
+  
+  // Fallback to relative path (works for CF Pages deployment)
+  return `/${cleanPath}`;
 }
 
 // Helper function to get video URL with cookie-free serving
@@ -15,6 +23,14 @@ export function getVideoUrl(videoPath: string): string {
   // Remove leading slash if present
   const cleanPath = videoPath.startsWith('/') ? videoPath.substring(1) : videoPath;
   
-  // Use static subdomain for cookie-free asset serving
-  return `https://static.milkacollective.com.au/${cleanPath}`;
+  // Use environment variable for static domain, fallback to relative path for CF Pages
+  const staticDomain = import.meta.env.STATIC_DOMAIN;
+  
+  if (staticDomain && staticDomain !== '') {
+    // Use configured static domain
+    return `${staticDomain}/${cleanPath}`;
+  }
+  
+  // Fallback to relative path (works for CF Pages deployment)
+  return `/${cleanPath}`;
 }

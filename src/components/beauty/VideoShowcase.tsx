@@ -22,7 +22,7 @@ const videos: VideoItem[] = [
     id: 1,
     vimeoId: "1095029463",
     vimeoHash: "db83b90006",
-    poster: getImageUrl("photos/classic-video-thumb.jpg"),
+    poster: getImageUrl("photos/IMG_5637.png"),
     title: "Classic Lash Transformation",
     subtitle: "Natural Elegance That Enhances Your Beauty",
     description: "Watch as we create the perfect everyday look with our signature classic technique. One extension per natural lash for subtle length and definition that looks effortlessly beautiful.",
@@ -54,7 +54,7 @@ const videos: VideoItem[] = [
     id: 3,
     vimeoId: "1095029437",
     vimeoHash: "a86d6a75e1",
-    poster: getImageUrl("photos/volume-video-thumb.jpg"),
+    poster: getImageUrl("photos/IMG_5258.png"),
     title: "Russian Volume Lash Transformation",
     subtitle: "Maximum Impact for a Show-Stopping Look",
     description: "Experience the ultimate in lash luxury with our Russian volume lashes. Multiple lightweight extensions per natural lash create a dramatic, full look that lasts.",
@@ -155,19 +155,29 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
       }
     };
 
-    // Prevent scroll on mobile when modal is open
+    // Prevent scroll on mobile when modal is open - preserve scroll position
+    const scrollY = window.scrollY;
     const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalPosition = window.getComputedStyle(document.body).position;
+    
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
     document.body.style.width = '100%';
 
     window.addEventListener('keydown', handleKeyDown);
     
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      
+      // Restore scroll position
       document.body.style.overflow = originalStyle;
-      document.body.style.position = '';
+      document.body.style.position = originalPosition;
+      document.body.style.top = '';
       document.body.style.width = '';
+      
+      // Restore scroll position after removing fixed positioning
+      window.scrollTo(0, scrollY);
     };
   }, [isPlaying, onClose]);
 

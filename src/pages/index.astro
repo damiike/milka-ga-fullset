@@ -549,28 +549,40 @@ function generateStars(rating: number): string {
 </LandingLayout>
 
 <script>
-  // Load canvas-confetti dynamically and create confetti function for final CTA
+  // Optimized confetti loading - defer until first use
   let confettiLoaded = false;
   let confetti;
+  let confettiPromise;
 
   async function loadConfetti() {
-    if (!confettiLoaded) {
-      const module = await import('canvas-confetti');
-      confetti = module.default;
-      confettiLoaded = true;
+    if (!confettiPromise) {
+      confettiPromise = import('canvas-confetti').then(module => {
+        confetti = module.default;
+        confettiLoaded = true;
+        return confetti;
+      });
     }
-    return confetti;
+    return confettiPromise;
   }
 
-  // Simple confetti function for smaller CTAs
+  // Simple confetti function for smaller CTAs - lazy loaded
   window.triggerConfetti = async function() {
-    const confetti = await loadConfetti();
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24']
-    });
+    if (!confettiLoaded) {
+      const confettiModule = await loadConfetti();
+      confettiModule({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24']
+      });
+    } else {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24']
+      });
+    }
   };
 
   window.triggerConfettiFinalCTA = async function() {

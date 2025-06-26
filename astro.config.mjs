@@ -2,9 +2,12 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server',
+  adapter: cloudflare(),
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
@@ -48,9 +51,5 @@ export default defineConfig({
       // Increase chunk size limit to allow larger bundles (fewer requests)
       chunkSizeWarningLimit: 1000
     }
-  },
-  output: 'static',
-  build: {
-    format: 'file'
   }
 });

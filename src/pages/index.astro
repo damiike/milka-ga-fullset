@@ -31,31 +31,71 @@ const apiUrl = `https://dev-azurefunction20240603151829.azurewebsites.net/GetRev
 
 let reviews: Review[] = [];
 
-// Fetch the data on the server during build
-try {
-  const response = await fetch(apiUrl);
-  if (!response.ok) {
-    throw new Error(`API call failed with status: ${response.status}`);
+// Fetch the data on the server during build with retry logic
+async function fetchReviewsWithRetry(url: string, maxRetries = 3, delay = 1000): Promise<Review[]> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Attempting to fetch reviews (attempt ${attempt}/${maxRetries})...`);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(url, { 
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; Astro-build)',
+          'Accept': 'application/json',
+        }
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`API call failed with status: ${response.status} - ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log('API response received successfully');
+      
+      // The reviews are nested inside data.data.reviews
+      if (data && data.data && data.data.reviews) {
+        // Filter for lash/beauty related reviews only (basic keyword filtering)
+        const allReviews = data.data.reviews;
+        const beautyKeywords = ['lash', 'lashes', 'beauty', 'beautiful', 'makeup', 'extensions', 'brow', 'eyelash'];
+        const lashReviews = allReviews.filter(review => 
+          beautyKeywords.some(keyword => 
+            review.reviewDetails.toLowerCase().includes(keyword)
+          )
+        );
+        
+        // Use lash-related reviews if found, otherwise use all reviews
+        const selectedReviews = (lashReviews.length > 0 ? lashReviews : allReviews).slice(0, 9);
+        console.log(`Successfully loaded ${selectedReviews.length} reviews`);
+        return selectedReviews;
+      }
+      
+      return [];
+    } catch (error) {
+      console.error(`Attempt ${attempt} failed:`, error);
+      
+      if (attempt === maxRetries) {
+        console.error("All retry attempts failed. Reviews will not be displayed.");
+        return [];
+      }
+      
+      // Wait before retrying (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, delay * attempt));
+    }
   }
-  const data = await response.json();
   
-  // The reviews are nested inside data.data.reviews
-  if (data && data.data && data.data.reviews) {
-    // Filter for lash/beauty related reviews only (basic keyword filtering)
-    const allReviews = data.data.reviews;
-    const beautyKeywords = ['lash', 'lashes', 'beauty', 'beautiful', 'makeup', 'extensions', 'brow', 'eyelash'];
-    const lashReviews = allReviews.filter(review => 
-      beautyKeywords.some(keyword => 
-        review.reviewDetails.toLowerCase().includes(keyword)
-      )
-    );
-    
-    // Use lash-related reviews if found, otherwise use all reviews
-    reviews = (lashReviews.length > 0 ? lashReviews : allReviews).slice(0, 9);
-  }
+  return [];
+}
+
+try {
+  reviews = await fetchReviewsWithRetry(apiUrl);
 } catch (error) {
-  console.error("Failed to fetch review data:", error);
-  // If the API fails, reviews array remains empty and we show fallback
+  console.error("Failed to fetch review data after all retries:", error);
+  reviews = [];
 }
 
 // Helper function to format date
@@ -118,7 +158,7 @@ function generateStars(rating: number): string {
     </div>
   </section>
   
-  <ServiceShowcase client:load />
+  <ServiceShowcase client:idle />
   
   <VideoShowcase client:visible />
   
@@ -139,7 +179,7 @@ function generateStars(rating: number): string {
     </div>
   </section>
   
-  <LuxuryTestimonials client:visible />
+  <LuxuryTestimonials client:idle />
   
   <!-- Before/After Transformation Section -->
   <section class="py-16 bg-gradient-to-b from-pink-50 to-white relative overflow-hidden">
@@ -253,7 +293,7 @@ function generateStars(rating: number): string {
     </div>
   </section>
   
-  <InstagramGallery client:visible />
+  <InstagramGallery client:idle />
   
   <!-- Google Reviews Section -->
   <section class="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden">
@@ -281,7 +321,7 @@ function generateStars(rating: number): string {
       </div>
 
       <!-- Reviews Grid -->
-      {reviews && reviews.length > 0 ? (
+      {reviews && reviews.length > 0 && (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
           {reviews.map((review, index) => (
             <article class="review-card group">
@@ -309,16 +349,6 @@ function generateStars(rating: number): string {
               </footer>
             </article>
           ))}
-        </div>
-      ) : (
-        <div class="text-center py-12">
-          <p class="text-gray-600 text-lg">
-            Our 95+ five-star reviews are loading. Visit our 
-            <a href="https://g.page/r/CSK8tK8tK8tK8EEBM/review" target="_blank" rel="noopener noreferrer" class="text-pink-600 hover:text-pink-700 underline">
-              Google Business page
-            </a> 
-            to see what our customers say!
-          </p>
         </div>
       )}
     </div>
@@ -549,18 +579,29 @@ function generateStars(rating: number): string {
 </LandingLayout>
 
 <script>
-  // Optimized confetti loading - defer until first use
+  // Optimized confetti loading - defer until first use with improved caching
   let confettiLoaded = false;
   let confetti;
   let confettiPromise;
 
   async function loadConfetti() {
     if (!confettiPromise) {
-      confettiPromise = import('canvas-confetti').then(module => {
+      // Use requestIdleCallback for better performance if available
+      const loadModule = () => import('canvas-confetti').then(module => {
         confetti = module.default;
         confettiLoaded = true;
         return confetti;
       });
+
+      if (window.requestIdleCallback) {
+        confettiPromise = new Promise(resolve => {
+          window.requestIdleCallback(() => {
+            loadModule().then(resolve);
+          });
+        });
+      } else {
+        confettiPromise = loadModule();
+      }
     }
     return confettiPromise;
   }

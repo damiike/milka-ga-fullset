@@ -79,7 +79,9 @@ export default defineConfig({
       // Enable asset inlining for small files
       assetsInlineLimit: 4096,
       // CSS optimization
-      cssMinify: true
+      cssMinify: true,
+      // Experimental code splitting for better loading
+      experimentalMinifySSRChunks: true
     }
   }
 });

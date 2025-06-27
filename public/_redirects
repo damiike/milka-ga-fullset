@@ -1,4 +1,7 @@
-# Enable compression for all routes
+# Serve static files first
+/photos/* /photos/:splat 200
+
+# Then handle other routes
 /*  /index.html  200
   X-Content-Type-Options: nosniff
   Cache-Control: public, max-age=0, must-revalidate

@@ -114,7 +114,7 @@ export function LuxuryHero() {
             transition={{ delay: 1, duration: 0.8 }}
             className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl font-light hidden md:block"
           >
-            Wake up beautiful every day with luxurious lash extensions 
+            Wakeup in your makeup every day with luxurious lash extensions 
             crafted by Brighton's most experienced artists
           </motion.p>
 

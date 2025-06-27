@@ -3,6 +3,8 @@
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  # Enable compression for all files
+  Content-Encoding: gzip
 
 # JavaScript files - compressible
 /*.js

@@ -57,6 +57,14 @@ const gtmId = import.meta.env.GTM_ID || "GTM-PTL53X2";
   <!-- Favicon -->
   <link rel="icon" href="/favicon.svg" />
   
+  <!-- Performance optimizations -->
+  <link rel="preload" href={getImageUrl("photos/IMG_5637.webp")} as="image" type="image/webp">
+  <link rel="preload" href={getImageUrl("photos/IMG_5400.webp")} as="image" type="image/webp">
+  <link rel="preload" href={getImageUrl("photos/IMG_5258.webp")} as="image" type="image/webp">
+  <link rel="dns-prefetch" href="//static.milkacollective.com.au">
+  <link rel="dns-prefetch" href="//us-assets.i.posthog.com">
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  
   <!-- Resource hints for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

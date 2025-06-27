@@ -68,7 +68,7 @@ const videos: VideoItem[] = [
   }
 ];
 
-// Optimized image component with lazy loading and performance improvements
+// High-performance image component with WebP support and lazy loading
 function OptimizedImage({ src, alt, className, onLoad }: {
   src: string;
   alt: string;
@@ -79,6 +79,17 @@ function OptimizedImage({ src, alt, className, onLoad }: {
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
+  // Generate WebP version of the image URL
+  const getWebPUrl = (originalSrc: string) => {
+    return originalSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+  };
+
+  // Generate different sizes for responsive images
+  const getSrcSet = (originalSrc: string) => {
+    const webpSrc = getWebPUrl(originalSrc);
+    return `${webpSrc} 1x, ${webpSrc} 2x`;
+  };
+
   useEffect(() => {
     const img = imgRef.current;
     if (!img) return;
@@ -86,11 +97,12 @@ function OptimizedImage({ src, alt, className, onLoad }: {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          img.src = src;
+          // Let the browser handle srcset loading
+          setIsLoaded(true);
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '50px' }
     );
 
     observer.observe(img);
@@ -99,21 +111,35 @@ function OptimizedImage({ src, alt, className, onLoad }: {
 
   return (
     <div className="relative w-full h-full">
-      <img
-        ref={imgRef}
-        alt={alt}
-        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
-        onLoad={() => {
-          setIsLoaded(true);
-          onLoad?.();
-        }}
-        onError={() => setHasError(true)}
-        loading="lazy"
-        decoding="async"
-      />
-      {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+      {/* Blur placeholder */}
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-100 to-rose-100 animate-pulse rounded-lg" />
       )}
+      
+      <picture>
+        {/* WebP source for modern browsers */}
+        <source 
+          srcSet={isLoaded ? getSrcSet(src) : ''} 
+          type="image/webp"
+        />
+        {/* Fallback for older browsers */}
+        <img
+          ref={imgRef}
+          src={isLoaded ? src : ''}
+          alt={alt}
+          className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
+          onLoad={() => {
+            setIsLoaded(true);
+            onLoad?.();
+          }}
+          onError={() => setHasError(true)}
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="400"
+        />
+      </picture>
+      
       {hasError && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
           <span className="text-gray-400 text-sm">Image unavailable</span>

@@ -86,7 +86,15 @@ export function LuxuryHero() {
                 transition={{ delay: 0.3, duration: 0.8 }}
                 className="block text-foreground"
               >
-                Elevating Natural Beauty,
+                Elevating
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="block text-foreground"
+              >
+                Your Natural Beauty,
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 50 }}

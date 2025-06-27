@@ -86,7 +86,7 @@ export function LuxuryHero() {
                 transition={{ delay: 0.3, duration: 0.8 }}
                 className="block text-foreground"
               >
-                Because Life's
+                Elevating
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, x: 50 }}
@@ -94,7 +94,7 @@ export function LuxuryHero() {
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="block font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent"
               >
-                Too Short
+                Natural Beauty,
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 50 }}
@@ -102,7 +102,7 @@ export function LuxuryHero() {
                 transition={{ delay: 0.7, duration: 0.8 }}
                 className="block text-foreground"
               >
-                for Short Lashes
+                One Lash at a Time
               </motion.span>
             </motion.h1>
           </div>

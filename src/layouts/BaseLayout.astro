@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getImageUrl } from '../config/assets';
 
 export interface Props {
   title: string;
@@ -67,7 +68,7 @@ const gtmId = import.meta.env.GTM_ID || "GTM-PTL53X2";
   <link rel="dns-prefetch" href="//static.milkacollective.com.au">
   
   <!-- Preload critical assets -->
-  <link rel="preload" as="image" href="/photos/milka-logo.png" fetchpriority="high">
+  <link rel="preload" as="image" href={getImageUrl("photos/milka-logo.png")} fetchpriority="high">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Mate:ital@0;1&display=swap">
   
   <!-- Inline critical CSS for above-the-fold content -->

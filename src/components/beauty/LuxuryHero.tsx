@@ -78,8 +78,8 @@ export function LuxuryHero() {
           </motion.div>
 
           {/* Main headline with split text animation */}
-          <div className="mb-8">
-            <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight">
+          <div className="mb-6">
+            <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight">
               <motion.span
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}

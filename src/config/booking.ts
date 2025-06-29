@@ -1,14 +1,47 @@
-// Booking configuration using environment variables
-const FRESHA_BUSINESS_ID = import.meta.env.FRESHA_BUSINESS_ID || "m4vife5o";
-
-// Generate booking URLs
+// Enhanced booking configuration with dynamic UTM preservation
 export const bookingConfig = {
-  // Main booking URL with service selection
-  bookingUrl: `https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-${FRESHA_BUSINESS_ID}/all-offer?menu=true&pId=1089926`,
+  // Base booking URL
+  baseBookingUrl: "https://www.fresha.com/book-now/milka-collective-hzs7tsc5/all-offer?share&pId=1089926",
   
-  // General booking URL
-  generalBookingUrl: `https://www.fresha.com/a/milka-collective-brighton-melbourne-229-bay-street-${FRESHA_BUSINESS_ID}/booking?menu=true`,
+  // Legacy URLs (kept for compatibility)
+  bookingUrl: "https://www.fresha.com/book-now/milka-collective-hzs7tsc5/all-offer?share&pId=1089926&utm_source=google&utm_medium=cpc&utm_campaign=leads",
+  generalBookingUrl: "https://www.fresha.com/book-now/milka-collective-hzs7tsc5/all-offer?share&pId=1089926&utm_source=google&utm_medium=cpc&utm_campaign=leads",
   
-  // Business ID for any custom URLs
-  businessId: FRESHA_BUSINESS_ID
+  // Business ID for reference
+  businessId: "hzs7tsc5"
 };
+
+// Dynamic booking URL that preserves campaign data
+export function generateBookingUrl() {
+  const baseUrl = bookingConfig.baseBookingUrl;
+  const params = new URLSearchParams();
+  
+  // Get current URL parameters
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Preserve UTM parameters
+    const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    utmParams.forEach(param => {
+      const value = urlParams.get(param);
+      if (value) {
+        params.set(param, value);
+      }
+    });
+    
+    // Preserve GCLID for Google Ads attribution
+    const gclid = urlParams.get('gclid');
+    if (gclid) {
+      params.set('gclid', gclid);
+    }
+    
+    // Add default tracking if no UTM parameters present
+    if (!params.has('utm_source')) {
+      params.set('utm_source', 'landing_page');
+      params.set('utm_medium', 'website');
+      params.set('utm_campaign', 'lash_bookings');
+    }
+  }
+  
+  return params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
+}

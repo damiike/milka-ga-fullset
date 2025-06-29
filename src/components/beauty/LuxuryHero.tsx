@@ -4,7 +4,7 @@ import { Sparkles, Star, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 export function LuxuryHero() {
   const { scrollY } = useScroll();
@@ -126,17 +126,20 @@ export function LuxuryHero() {
             className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-12"
           >
             <motion.a
-              href={bookingConfig.bookingUrl}
+              href={generateBookingUrl()}
               onClick={() => {
                 // Trigger confetti animation
                 triggerConfetti();
                 
-                // Track booking click with GTM
+                // Enhanced tracking with booking details
                 if (typeof window !== 'undefined' && (window as any).dataLayer) {
                   (window as any).dataLayer.push({
                     event: 'booking_click',
                     click_type: 'hero_primary',
-                    button_text: 'Book Your Transformation'
+                    button_text: 'Book Your Transformation',
+                    value: 155, // Average booking value for Google Ads
+                    currency: 'AUD',
+                    service_type: 'full_set'
                   });
                 }
               }}

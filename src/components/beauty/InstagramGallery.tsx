@@ -192,6 +192,10 @@ export function InstagramGallery() {
                 src={post.image} 
                 alt={post.caption}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                loading="lazy"
+                decoding="async"
+                width="400"
+                height="400"
               />
               
               {/* Image title overlay - always visible */}

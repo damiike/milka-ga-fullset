@@ -59,7 +59,11 @@ export function LuxuryHero() {
             <img 
               src={getImageUrl("photos/milka-logo.png")}
               alt="Milka Collective Logo"
-              className="h-16 md:h-20 mx-auto"
+              className="h-16 md:h-20 mx-auto hero-logo"
+              width="200"
+              height="80"
+              fetchPriority="high"
+              loading="eager"
             />
           </motion.div>
 

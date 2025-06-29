@@ -16,6 +16,10 @@ const LashTypeCard = ({ title, description, imageUrl }: { title: string; descrip
         src={imageUrl} 
         alt={title}
         className="w-full h-48 object-cover"
+        loading="lazy"
+        decoding="async"
+        width="400"
+        height="192"
       />
     </div>
     <CardHeader>

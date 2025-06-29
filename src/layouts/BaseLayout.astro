@@ -63,40 +63,43 @@ const gtmId = import.meta.env.GTM_ID || "GTM-PTL53X2";
   <link rel="preload" href={getImageUrl("photos/IMG_5258.webp")} as="image" type="image/webp">
   <link rel="dns-prefetch" href="//static.milkacollective.com.au">
   <link rel="dns-prefetch" href="//us-assets.i.posthog.com">
-  <link rel="dns-prefetch" href="//fonts.googleapis.com">
   
   <!-- Resource hints for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="//www.googletagmanager.com">
   <link rel="dns-prefetch" href="//us.i.posthog.com">
   <link rel="dns-prefetch" href="//player.vimeo.com">
   <link rel="dns-prefetch" href="//i.vimeocdn.com">
   <link rel="dns-prefetch" href="//www.fresha.com">
   <link rel="dns-prefetch" href="//static.milkacollective.com.au">
-  <link rel="dns-prefetch" href="//dev-azurefunction20240603151829.azurewebsites.net">
+  <link rel="dns-prefetch" href="//apiv2.giveme5.ai">
+  <link rel="dns-prefetch" href="//js.stripe.com">
   
   <!-- Preconnect to critical third-party domains -->
   <link rel="preconnect" href="https://player.vimeo.com">
   <link rel="preconnect" href="https://static.milkacollective.com.au">
   
   <!-- Preload critical assets -->
-  <link rel="preload" as="image" href={getImageUrl("photos/milka-logo.png")} fetchpriority="high">
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Mate:ital@0;1&display=swap">
+  <link rel="preload" as="image" href={getImageUrl("photos/milka-logo.png")} fetchpriority="high" type="image/png">
   
   <!-- Inline critical CSS for above-the-fold content -->
   <style>
     /* Critical hero section styles inlined to reduce HTTP requests */
     .hero-section{min-height:100vh;background:linear-gradient(135deg,var(--background) 0%,var(--muted) 100%);position:relative;overflow:hidden}.hero-container{max-width:1400px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:10;display:flex;align-items:center;min-height:100vh}.hero-content{flex:1;text-align:center;padding:6rem 0}.hero-title{font-size:clamp(2.5rem,6vw,6rem);font-weight:300;line-height:1.1;margin-bottom:1.5rem;color:var(--foreground);font-family:'Julius Sans One',sans-serif}.hero-subtitle{font-size:clamp(1.25rem,3vw,2rem);color:var(--muted-foreground);margin-bottom:3rem;max-width:48rem;margin-left:auto;margin-right:auto;font-weight:300}.cta-buttons{display:flex;flex-direction:column;gap:1rem;margin-bottom:3rem}@media (min-width:640px){.cta-buttons{flex-direction:row;justify-content:center}}.btn-primary{display:inline-block;padding:1rem 2rem;background:linear-gradient(135deg,#fb7185 0%,#e11d48 100%);color:white;border-radius:9999px;font-weight:500;text-decoration:none;transition:all 0.3s ease;box-shadow:0 4px 20px -2px rgba(251,113,133,0.3)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px -2px rgba(251,113,133,0.4)}.btn-secondary{display:inline-block;padding:1rem 2rem;background:white;color:var(--foreground);border:2px solid rgba(251,113,133,0.2);border-radius:9999px;font-weight:500;text-decoration:none;transition:all 0.3s ease}.btn-secondary:hover{background:rgba(251,113,133,0.1);border-color:rgba(251,113,133,0.4)}
+    /* Logo optimizations to prevent layout shift */
+    .hero-logo{width:200px;height:80px;object-fit:contain}@media(min-width:768px){.hero-logo{height:80px}}
+    /* Prevent flash of unstyled content */
+    img{max-width:100%;height:auto;display:block}
     /* Loading states for lazy components */
     .component-loading{opacity:0;transform:translateY(20px);transition:opacity 0.3s ease,transform 0.3s ease}.component-loaded{opacity:1;transform:translateY(0)}
     /* Skeleton loading for images */
     .img-skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:loading 1.5s infinite}@keyframes loading{0%{background-position:200% 0}100%{background-position:-200% 0}}
   </style>
 
-  <!-- Google Fonts for luxury typography (optimized loading) -->
-  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Mate:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Mate:ital@0;1&display=swap" rel="stylesheet"></noscript>
+  <!-- Self-hosted fonts for optimal performance -->
+  <link rel="preload" href="/fonts/julius-sans-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/mate-regular-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/mate-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
   
   <!-- Google Tag Manager - Deferred for performance -->
   <script define:vars={{ gtmId }}>
@@ -112,11 +115,19 @@ const gtmId = import.meta.env.GTM_ID || "GTM-PTL53X2";
       })(window,document,'script','dataLayer',gtmId);
     }
     
-    // Load GTM after page is fully loaded
+    // Load GTM after page is fully loaded and browser is idle
+    function initGTM() {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(loadGTM, { timeout: 2000 });
+      } else {
+        setTimeout(loadGTM, 1000);
+      }
+    }
+    
     if (document.readyState === 'complete') {
-      loadGTM();
+      initGTM();
     } else {
-      window.addEventListener('load', loadGTM);
+      window.addEventListener('load', initGTM);
     }
   </script>
   <!-- End Google Tag Manager -->
@@ -173,13 +184,21 @@ const gtmId = import.meta.env.GTM_ID || "GTM-PTL53X2";
         register: function() { /* Queue for later */ }
       };
       
-      // Load PostHog after initial page render
+      // Load PostHog after initial page render and when browser is idle
+      function initPostHog() {
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(function() {
+            setTimeout(loadPostHog, 100);
+          }, { timeout: 3000 });
+        } else {
+          setTimeout(loadPostHog, 500);
+        }
+      }
+      
       if (document.readyState === 'complete') {
-        setTimeout(loadPostHog, 100);
+        initPostHog();
       } else {
-        window.addEventListener('load', function() {
-          setTimeout(loadPostHog, 100);
-        });
+        window.addEventListener('load', initPostHog);
       }
     })();
   </script>

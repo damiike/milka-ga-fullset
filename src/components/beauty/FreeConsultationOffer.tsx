@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Gift, CheckCircle, Sparkles } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 export function FreeConsultationOffer() {
   const { triggerConfetti } = useConfetti();
@@ -66,7 +66,7 @@ export function FreeConsultationOffer() {
         {/* Value proposition */}
         <div className="text-center">
           <motion.a
-            href={bookingConfig.bookingUrl}
+            href={generateBookingUrl()}
             onClick={() => {
               // Trigger confetti animation
               triggerConfetti();
@@ -100,7 +100,7 @@ export function FreeConsultationBadge() {
 
   return (
     <motion.a
-      href={bookingConfig.bookingUrl}
+      href={generateBookingUrl()}
       onClick={() => {
         // Trigger confetti animation
         triggerConfetti();

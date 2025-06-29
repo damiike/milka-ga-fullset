@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Sparkles, Clock, DollarSign } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 interface Service {
   category: string;
@@ -230,7 +230,7 @@ export function ServiceShowcase() {
                   {/* Button Section - Always at Bottom */}
 
                   <motion.a
-                    href={bookingConfig.bookingUrl}
+                    href={generateBookingUrl()}
                     onClick={() => {
                       // Trigger confetti animation
                       triggerConfetti();
@@ -282,7 +282,7 @@ export function ServiceShowcase() {
         >
           <p className="text-muted-foreground mb-4">Can't decide? Our artists will help you choose the perfect style during your consultation</p>
           <motion.a
-            href={bookingConfig.bookingUrl}
+            href={generateBookingUrl()}
             onClick={() => {
               // Trigger confetti animation
               triggerConfetti();

@@ -3,7 +3,7 @@ import { Play, Sparkles, X } from 'lucide-react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getImageUrl } from '../../config/assets';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 interface VideoItem {
   id: number;
@@ -490,7 +490,7 @@ export const VideoShowcase = () => {
     }
     
     // Redirect to booking with analytics
-    window.location.href = bookingConfig.bookingUrl;
+    window.location.href = generateBookingUrl();
   }, [triggerConfetti]);
 
   return (

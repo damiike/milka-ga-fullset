@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,13 +22,14 @@ export function FloatingBookingButton() {
     // Trigger confetti animation
     triggerConfetti();
     
-    // Track conversion with GTM
+    // Enhanced tracking with booking details
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: 'booking_click',
         click_type: 'floating_button',
         scroll_position: window.scrollY,
-        expanded: isExpanded
+        expanded: isExpanded,
+        service_type: 'full_set'
       });
     }
     
@@ -40,8 +41,8 @@ export function FloatingBookingButton() {
       });
     }
     
-    // Redirect to booking page
-    window.location.href = bookingConfig.bookingUrl;
+    // Redirect to booking page with UTM preservation
+    window.location.href = generateBookingUrl();
   };
 
   return (

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Camera } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
-import { bookingConfig } from '../../config/booking';
+import { bookingConfig, generateBookingUrl } from '../../config/booking';
 
 interface InstagramPost {
   id: number;
@@ -164,7 +164,7 @@ export function InstagramGallery() {
           {posts.map((post, index) => (
             <motion.a
               key={post.id}
-              href={bookingConfig.bookingUrl}
+              href={generateBookingUrl()}
               onClick={() => {
                 // Trigger confetti animation
                 triggerConfetti();

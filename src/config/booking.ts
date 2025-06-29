@@ -34,14 +34,14 @@ export function generateBookingUrl() {
     if (gclid) {
       params.set('gclid', gclid);
     }
-    
-    // Add default tracking if no UTM parameters present
-    if (!params.has('utm_source')) {
-      params.set('utm_source', 'landing_page');
-      params.set('utm_medium', 'website');
-      params.set('utm_campaign', 'lash_bookings');
-    }
   }
   
-  return params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
+  // Add default tracking if no UTM parameters present (both server and client side)
+  if (!params.has('utm_source')) {
+    params.set('utm_source', 'landing_page');
+    params.set('utm_medium', 'website');
+    params.set('utm_campaign', 'lash_bookings');
+  }
+  
+  return params.toString() ? `${baseUrl}&${params.toString()}` : `${baseUrl}&utm_source=landing_page&utm_medium=website&utm_campaign=lash_bookings`;
 }

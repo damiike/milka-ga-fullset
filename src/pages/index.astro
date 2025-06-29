@@ -10,7 +10,7 @@ import { FloatingBookingButton } from '../components/beauty/FloatingBookingButto
 import { FreeConsultationOffer } from '../components/beauty/FreeConsultationOffer';
 import { FAQ } from '../components/beauty/FAQ';
 import { landingConfigs } from '../data/landing-configs';
-import { bookingConfig } from '../config/booking';
+import { bookingConfig, generateBookingUrl } from '../config/booking';
 
 const config = landingConfigs.beauty;
 const variant = 'beauty';
@@ -27,7 +27,7 @@ interface Review {
 
 // API configuration - use environment variable for security
 const apiKey = import.meta.env.REVIEW_API_KEY || "Tu7FbDX12fU1h0V23NyGAJWeGgE9JS";
-const apiUrl = `https://dev-azurefunction20240603151829.azurewebsites.net/GetReviewDetail?key=${apiKey}&pageNumber=1&pageSize=20&showEmptyReview=false&minStars=4`;
+const apiUrl = `https://apiv2.giveme5.ai/GetReviewDetail?key=${apiKey}&pageNumber=1&pageSize=20&showEmptyReview=false&minStars=4`;
 
 let reviews: Review[] = [];
 
@@ -69,7 +69,7 @@ async function fetchReviewsWithRetry(url: string, maxRetries = 3, delay = 1000):
         );
         
         // Use lash-related reviews if found, otherwise use all reviews
-        const selectedReviews = (lashReviews.length > 0 ? lashReviews : allReviews).slice(0, 9);
+        const selectedReviews = (lashReviews.length > 0 ? lashReviews : allReviews).slice(0, 15);
         console.log(`Successfully loaded ${selectedReviews.length} reviews`);
         return selectedReviews;
       }
@@ -273,9 +273,9 @@ function generateStars(rating: number): string {
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href={bookingConfig.bookingUrl}
+                href={generateBookingUrl()}
                 class="bg-gradient-to-r from-pink-500 to-rose-400 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all text-center"
-                onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'transformation_cta' }); }"
+                onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'transformation_cta', service_type: 'full_set' }); }"
               >
                 Book My Transformation
               </a>
@@ -475,9 +475,9 @@ function generateStars(rating: number): string {
             Call Now: 0480 095 789
           </a>
           <a
-            href={bookingConfig.bookingUrl}
+            href={generateBookingUrl()}
             class="bg-white text-gray-800 px-8 py-3 rounded-full font-medium shadow-lg border border-gray-200 hover:bg-gray-50 transition-all text-center"
-            onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'help_choosing' }); }"
+            onclick="triggerConfetti(); if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'booking_click', click_type: 'help_choosing', service_type: 'full_set' }); }"
           >
             Book Now
           </a>
@@ -521,14 +521,15 @@ function generateStars(rating: number): string {
       
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <a
-          href={bookingConfig.bookingUrl}
+          href={generateBookingUrl()}
           onclick="
             triggerConfettiFinalCTA();
             if (typeof window !== 'undefined' && window.dataLayer) {
               window.dataLayer.push({
                 event: 'booking_click',
                 click_type: 'final_cta',
-                button_text: 'Book Your Appointment Now'
+                button_text: 'Book Your Appointment Now',
+                service_type: 'full_set'
               });
             }
           "

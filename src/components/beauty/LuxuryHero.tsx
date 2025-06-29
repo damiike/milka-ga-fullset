@@ -137,8 +137,6 @@ export function LuxuryHero() {
                     event: 'booking_click',
                     click_type: 'hero_primary',
                     button_text: 'Book Your Transformation',
-                    value: 155, // Average booking value for Google Ads
-                    currency: 'AUD',
                     service_type: 'full_set'
                   });
                 }

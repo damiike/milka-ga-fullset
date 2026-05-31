@@ -43,20 +43,13 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // Bundle all vendor libraries together to reduce requests
+            // Vendor only — do not merge beauty islands into one chunk (breaks per-component exports on mobile)
             if (id.includes('node_modules')) {
-              // Group all vendor dependencies into a single chunk
               return 'vendor';
-            }
-            // Group all components into fewer chunks
-            if (id.includes('/components/beauty/')) {
-              return 'components';
             }
             if (id.includes('/components/ui/')) {
               return 'ui';
             }
-            // Default chunk for everything else
-            return 'main';
           }
         }
       },

@@ -1,7 +1,11 @@
-import { motion } from 'framer-motion';
 import { Award, Heart, Shield, Sparkles, Clock, MapPin } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-const reasons = [
+const reasons: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}[] = [
   {
     icon: Award,
     title: 'Master Artists',
@@ -38,51 +42,35 @@ export function WhyChooseUs() {
   return (
     <section className="py-24 section-base border-t border-border">
       <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <p className="eyebrow mb-4">Why Milka Collective</p>
           <h2 className="text-foreground mb-4">Experience the Difference</h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {reasons.map((reason, index) => (
-            <motion.div
-              key={reason.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group h-full"
-            >
-              <div className="pro-card h-full flex flex-col">
-                <div className="w-12 h-12 bg-muted border border-border rounded-sm flex items-center justify-center mb-5">
-                  <reason.icon className="w-7 h-7 text-foreground" strokeWidth={1.25} />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-lg font-medium text-foreground mb-3 min-h-[3rem] leading-tight">
-                    {reason.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mt-16 text-xl text-muted-foreground font-light max-w-3xl mx-auto"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {reasons.map((reason) => {
+            const Icon = reason.icon;
+            return (
+              <div key={reason.title} className="group h-full">
+                <div className="pro-card h-full flex flex-col">
+                  <div className="w-12 h-12 bg-muted border border-border rounded-sm flex items-center justify-center mb-5">
+                    <Icon className="w-7 h-7 text-foreground" strokeWidth={1.25} />
+                  </div>
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-medium text-foreground mb-3 min-h-[3rem] leading-tight">
+                      {reason.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <p className="text-center mt-16 text-xl text-muted-foreground font-light max-w-3xl mx-auto">
           Join hundreds of happy clients who trust us with their lashes.
-        </motion.p>
+        </p>
       </div>
     </section>
   );

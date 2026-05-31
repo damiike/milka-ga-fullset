@@ -101,7 +101,7 @@ export const landingConfigs = {
     testimonials: [
       {
         name: 'Sarah Johnson',
-        role: 'Loyal Customer',
+        role: 'Loyal Client',
         company: '',
         content: 'The best lash extensions I\'ve ever had! They look so natural and last for weeks.',
         rating: 5
@@ -115,7 +115,7 @@ export const landingConfigs = {
       },
       {
         name: "Claire B.",
-        role: "Regular Customer",
+        role: "Regular Client",
         company: "Brighton",
         content: "The studio is beautiful, always clean, and the service is exceptional. I wouldn't trust anyone else with my lashes!",
         rating: 5
@@ -124,19 +124,19 @@ export const landingConfigs = {
     
     trustIndicators: {
       text: "Over",
-      count: "90+ ⭐⭐⭐⭐⭐"
+      count: "105+ ⭐⭐⭐⭐⭐"
     },
     
     pricing: [
       {
         name: "Classic Sets",
-        price: "$80",
+        price: "$90",
         period: "starting from",
         description: "Natural, elegant lash extensions",
         features: [
-          "Natural Classic Set - $135",
-          "Full Classic Set - $155",
-          "Half Classic Set - $80",
+          "Natural Classic Set - $140",
+          "Full Classic Set - $160",
+          "Half Classic Set - $90",
           "Perfect for everyday wear",
           "Lasts 2-3 weeks"
         ],
@@ -149,9 +149,9 @@ export const landingConfigs = {
         period: "starting from",
         description: "Dramatic, voluminous lashes",
         features: [
-          "Natural Russian Volume - $185",
-          "Full Russian Volume - $210",
-          "Mega Russian Volume - $295",
+          "Russian Volume Natural Set - $185",
+          "Full Russian Volume Set - $210",
+          "Full Mega Russian Volume Set - $295",
           "Maximum impact & drama",
           "Long-lasting results"
         ],
@@ -160,12 +160,12 @@ export const landingConfigs = {
       },
       {
         name: "Specialty Sets",
-        price: "$170",
+        price: "$180",
         period: "starting from",
         description: "Unique styles for every occasion",
         features: [
           "Full Hybrid Set - $185 (Most Popular)",
-          "Wet Look Full Set - $170",
+          "Wet Look Full Set - $180",
           "Trending styles available",
           "Custom styling consultation",
           "Perfect for special events"
@@ -180,8 +180,8 @@ export const landingConfigs = {
         period: "starting from",
         description: "Enhance any lash set",
         features: [
-          "Bottom Lashes - $60",
-          "Wispy Style - $20",
+          "Bottom Lashes Add-On - $60",
+          "Wispy Add-On - $20",
           "Can be added to any set",
           "Customise your look",
           "Complimentary consultation"
@@ -255,14 +255,14 @@ export const landingConfigs = {
     ],
     
     seo: {
-      title: "Milka Collective | Lash Extensions Brighton | 95+ 5-Star Reviews",
-      description: "Brighton's premier lash extension and beauty salon. Professional service with over 95 five-star reviews.",
+      title: "Milka Collective | Lash Extensions Brighton | 105+ 5-Star Reviews",
+      description: "Brighton's premier lash extension and beauty salon. Professional service with over 105 five-star reviews.",
       ogImage: "/og-milka-beauty.png"
     },
     
     theme: {
-      primaryColor: "pink",
-      accentColor: "rose"
+      primaryColor: "neutral",
+      accentColor: "champagne"
     }
   }
 };

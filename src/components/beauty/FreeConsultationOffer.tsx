@@ -1,53 +1,39 @@
 import { motion } from 'framer-motion';
-import { Gift, CheckCircle, Sparkles } from 'lucide-react';
+import { Calendar, Clock, Gift } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig, generateBookingUrl } from '../../config/booking';
+import { generateBookingUrl } from '../../config/booking';
 
 export function FreeConsultationOffer() {
   const { triggerConfetti } = useConfetti();
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="bg-gradient-to-br from-pink-500 to-rose-400 rounded-2xl p-8 text-white relative overflow-hidden max-w-lg mx-auto"
+      className="brand-band rounded-sm p-8 relative overflow-hidden max-w-lg mx-auto border border-border"
     >
-      {/* Decorative elements */}
-      <div className="absolute top-4 right-4 opacity-20">
-        <Sparkles className="w-12 h-12" />
-      </div>
-      <div className="absolute bottom-4 left-4 opacity-10">
-        <Sparkles className="w-8 h-8" />
-      </div>
-      
       <div className="relative z-10">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 3 }}
-            className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4"
-          >
-            <Gift className="w-8 h-8 text-white" />
-          </motion.div>
-          
-          <h3 className="text-2xl font-bold mb-2">
-            FREE Lash Consultation
-          </h3>
-          <p className="text-white/90 text-lg">
-            Included with every new full set booking
-          </p>
+        <div className="flex items-center gap-2 mb-4">
+          <Gift className="w-6 h-6 text-accent" />
+          <span className="eyebrow text-accent">Included with Full Set</span>
         </div>
 
-        {/* Benefits */}
+        <h3 className="text-2xl md:text-3xl font-light text-accent mb-2">
+          FREE Lash Consultation
+        </h3>
+
+        <p className="text-accent/80 mb-6">
+          Included with every new full set booking
+        </p>
+
         <div className="space-y-3 mb-6">
           {[
             'Personalized lash style assessment',
             'Professional eye shape analysis',
             'Custom length & curl recommendations',
-            'Aftercare tips for long-lasting results'
+            'Aftercare tips for long-lasting results',
           ].map((benefit, index) => (
             <motion.div
               key={index}
@@ -55,46 +41,37 @@ export function FreeConsultationOffer() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 text-accent/90"
             >
-              <CheckCircle className="w-5 h-5 text-white flex-shrink-0" />
-              <span className="text-white/95">{benefit}</span>
+              <span className="text-accent">✓</span>
+              <span>{benefit}</span>
             </motion.div>
           ))}
         </div>
 
-        {/* Value proposition */}
-        <div className="text-center">
-          <motion.a
-            href={generateBookingUrl()}
-            onClick={() => {
-              // Trigger confetti animation
-              triggerConfetti();
-              
-              // Track booking click with GTM
-              if (typeof window !== 'undefined' && (window as any).dataLayer) {
-                (window as any).dataLayer.push({
-                  event: 'booking_click',
-                  click_type: 'consultation_offer_cta',
-                  button_text: 'Perfect for New Clients'
-                });
-              }
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-block"
-          >
-            <div className="bg-white text-pink-600 font-semibold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all cursor-pointer">
-              Perfect for New Clients ✨
-            </div>
-          </motion.a>
-        </div>
+        <motion.a
+          href={generateBookingUrl()}
+          onClick={() => {
+            triggerConfetti();
+            if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+              (window as Window & { dataLayer: unknown[] }).dataLayer.push({
+                event: 'booking_click',
+                click_type: 'consultation_offer_cta',
+                button_text: 'Perfect for New Clients',
+              });
+            }
+          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="btn-luxury-outline w-full border-accent text-accent hover:bg-accent hover:text-primary inline-flex"
+        >
+          Perfect for New Clients
+        </motion.a>
       </div>
     </motion.div>
   );
 }
 
-// Compact version for inline use
 export function FreeConsultationBadge() {
   const { triggerConfetti } = useConfetti();
 
@@ -102,24 +79,21 @@ export function FreeConsultationBadge() {
     <motion.a
       href={generateBookingUrl()}
       onClick={() => {
-        // Trigger confetti animation
         triggerConfetti();
-        
-        // Track booking click with GTM
-        if (typeof window !== 'undefined' && (window as any).dataLayer) {
-          (window as any).dataLayer.push({
+        if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+          (window as Window & { dataLayer: unknown[] }).dataLayer.push({
             event: 'booking_click',
             click_type: 'hero_consultation_badge',
-            button_text: 'FREE Consultation'
+            button_text: 'FREE Consultation',
           });
         }
       }}
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 500 }}
-      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg hover:shadow-xl transition-all cursor-pointer"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 500 }}
+      className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-sm text-sm font-medium uppercase tracking-wider luxury-shadow"
     >
       <Gift className="w-4 h-4" />
       <span>FREE Consultation</span>

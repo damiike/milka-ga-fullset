@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
-import { bookingConfig, generateBookingUrl } from '../../config/booking';
+import { generateBookingUrl } from '../../config/booking';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,29 +19,25 @@ export function FloatingBookingButton() {
   }, []);
 
   const handleBookingClick = () => {
-    // Trigger confetti animation
     triggerConfetti();
-    
-    // Enhanced tracking with booking details
-    if (typeof window !== 'undefined' && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
+
+    if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+      (window as Window & { dataLayer: unknown[] }).dataLayer.push({
         event: 'booking_click',
         click_type: 'floating_button',
         scroll_position: window.scrollY,
         expanded: isExpanded,
-        service_type: 'full_set'
+        service_type: 'full_set',
       });
     }
-    
-    // Legacy PostHog tracking
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture('floating_booking_click', {
+
+    if (typeof window !== 'undefined' && (window as Window & { posthog?: { capture: (event: string, props: Record<string, unknown>) => void } }).posthog) {
+      (window as Window & { posthog: { capture: (event: string, props: Record<string, unknown>) => void } }).posthog.capture('floating_booking_click', {
         scroll_position: window.scrollY,
-        expanded: isExpanded
+        expanded: isExpanded,
       });
     }
-    
-    // Redirect to booking page with UTM preservation
+
     window.location.href = generateBookingUrl();
   };
 
@@ -49,7 +45,6 @@ export function FloatingBookingButton() {
     <AnimatePresence>
       {isVisible && (
         <>
-          {/* Backdrop for expanded state */}
           {isExpanded && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -60,12 +55,11 @@ export function FloatingBookingButton() {
             />
           )}
 
-          {/* Floating button */}
           <motion.div
             initial={{ scale: 0, y: 100 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0, y: 100 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="fixed bottom-6 right-6 z-50"
           >
             {!isExpanded ? (
@@ -75,23 +69,20 @@ export function FloatingBookingButton() {
                 whileTap={{ scale: 0.95 }}
                 className="relative group"
               >
-                {/* Pulsing ring */}
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 2 }}
-                  className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-400 rounded-full opacity-50 blur-md"
+                  className="absolute inset-0 bg-primary rounded-full opacity-50 blur-md"
                 />
-                
-                {/* Main button */}
-                <div className="relative bg-gradient-to-r from-pink-500 to-rose-400 text-white p-4 rounded-full shadow-2xl">
+
+                <div className="relative bg-primary text-primary-foreground p-4 rounded-full shadow-2xl">
                   <Calendar className="w-6 h-6" />
                 </div>
-                
-                {/* Hover tooltip */}
+
                 <motion.div
                   initial={{ opacity: 0, x: 10 }}
                   whileHover={{ opacity: 1, x: 0 }}
-                  className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap pointer-events-none"
+                  className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-primary-foreground px-3 py-2 rounded-lg text-sm whitespace-nowrap pointer-events-none"
                 >
                   Book Now
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full">
@@ -106,53 +97,48 @@ export function FloatingBookingButton() {
                 exit={{ scale: 0.8, opacity: 0 }}
                 className="bg-white rounded-3xl shadow-2xl p-6 w-80"
               >
-                {/* Close button */}
                 <button
                   onClick={() => setIsExpanded(false)}
                   className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
                 >
                   <X className="w-5 h-5" />
                 </button>
-                
-                {/* Content */}
+
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Calendar className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="w-8 h-8 text-primary-foreground" />
                   </div>
-                  
+
                   <h3 className="text-xl font-medium text-gray-900 mb-2">
                     Ready for Gorgeous Lashes?
                   </h3>
-                  
+
                   <p className="text-gray-600 mb-6">
-                    Book your appointment online or give us a call
+                    Book online in under a minute — or call and we'll match you to the perfect lash style.
                   </p>
-                  
+
                   <motion.button
                     onClick={handleBookingClick}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-400 text-white font-medium rounded-full shadow-lg mb-3"
+                    className="w-full px-6 py-3 bg-primary text-primary-foreground font-medium rounded-full shadow-lg mb-3"
                   >
                     Book Online Now
                   </motion.button>
-                  
+
                   <a
                     href="tel:0480095789"
                     onClick={() => {
-                      // Trigger confetti animation
                       triggerConfetti();
-                      
-                      // Track phone click with GTM
-                      if (typeof window !== 'undefined' && (window as any).dataLayer) {
-                        (window as any).dataLayer.push({
+                      if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+                        (window as Window & { dataLayer: unknown[] }).dataLayer.push({
                           event: 'phone_click',
                           click_type: 'floating_button',
-                          phone_number: '0480095789'
+                          phone_number: '0480095789',
                         });
                       }
                     }}
-                    className="text-pink-600 font-medium hover:text-pink-700 transition-colors"
+                    className="text-foreground font-medium hover:text-muted-foreground transition-colors"
                   >
                     or Call 0480 095 789
                   </a>

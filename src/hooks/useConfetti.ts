@@ -17,7 +17,7 @@ export function useConfetti() {
         ...defaults,
         ...opts,
         particleCount: Math.floor(count * particleRatio),
-        colors: ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24', '#a78bfa', '#34d399', '#ffffff']
+        colors: ['#0a0a0a', '#dcccb8', '#e3dad0', '#6e6862']
       });
     }
 

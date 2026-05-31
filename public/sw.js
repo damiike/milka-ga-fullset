@@ -1,5 +1,5 @@
 // Service Worker for aggressive caching
-const CACHE_NAME = 'milka-lashes-v1';
+const CACHE_NAME = 'milka-lashes-v3';
 const STATIC_ASSETS = [
   '/',
   '/photos/milka-logo.png',

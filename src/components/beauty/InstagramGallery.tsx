@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Camera } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
 import { bookingConfig, generateBookingUrl } from '../../config/booking';
@@ -129,7 +128,6 @@ export function InstagramGallery() {
   return (
     <section className="py-24 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -137,25 +135,11 @@ export function InstagramGallery() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-4"
-          >
-            <Camera className="w-5 h-5 text-primary" />
-            <span className="text-primary font-medium uppercase tracking-widest text-sm">Real Results @milkacollective</span>
-            <Camera className="w-5 h-5 text-primary" />
-          </motion.div>
-          
-          <h2 className="text-4xl md:text-6xl font-light text-foreground mb-6">
-            Our Latest
-            <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent"> Creations</span>
-          </h2>
+          <p className="eyebrow mb-4">Real Results @milkacollective</p>
+          <h2 className="text-foreground mb-4">Our Latest Creations</h2>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            See our work and get inspired for your next lash appointment
+            Real lash extensions from our Brighton studio — classic, hybrid and volume sets crafted to suit your style.
           </p>
         </motion.div>
 

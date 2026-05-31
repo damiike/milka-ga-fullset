@@ -113,7 +113,7 @@ function OptimizedImage({ src, alt, className, onLoad }: {
     <div className="relative w-full h-full">
       {/* Blur placeholder */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-100 to-rose-100 animate-pulse rounded-lg" />
+        <div className="absolute inset-0 bg-muted animate-pulse rounded-sm" />
       )}
       
       <picture>
@@ -301,7 +301,7 @@ function VimeoPlayer({ video, isPlaying, onClose }: {
                   setHasError(false);
                   setIsLoading(true);
                 }}
-                className="px-6 py-3 bg-pink-500 text-white rounded-lg font-medium hover:bg-pink-600 transition-colors"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded-md font-medium hover:bg-[#1a1a1a] transition-colors"
               >
                 Retry
               </button>
@@ -495,15 +495,10 @@ export const VideoShowcase = () => {
 
   return (
     <section 
-      className="py-24 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden"
+      className="py-24 section-base border-t border-border"
       data-section="video-showcase"
     >
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full filter blur-3xl opacity-20" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-rose-100 to-pink-100 rounded-full filter blur-3xl opacity-20" />
-      
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
+      <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -511,27 +506,11 @@ export const VideoShowcase = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-4"
-          >
-            <Play className="w-5 h-5 text-pink-500" />
-            <span className="text-pink-600 font-medium uppercase tracking-widest text-sm">See The Magic</span>
-            <Play className="w-5 h-5 text-pink-500" />
-          </motion.div>
+          <p className="eyebrow mb-4">See The Magic</p>
+          <h2 className="text-foreground mb-4">Watch Your Transformation Unfold</h2>
           
-          <h2 className="text-4xl md:text-6xl font-light text-gray-900 mb-6">
-            Watch Your
-            <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400"> Transformation </span>
-            Unfold
-          </h2>
-          
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Go behind the scenes and see exactly how we create stunning lash transformations. 
-            Each technique is carefully crafted to enhance your natural beauty.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Watch real lash transformations from our Brighton studio — classic, hybrid and Russian volume techniques crafted to suit your eye shape.
           </p>
         </motion.div>
 
@@ -544,7 +523,7 @@ export const VideoShowcase = () => {
               whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
               transition={prefersReducedMotion ? {} : { delay: index * 0.15, duration: 0.6 }}
               viewport={{ once: true, margin: "-50px" }}
-              className="bg-white rounded-2xl overflow-hidden shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-300 group flex flex-col h-full"
+              className="bg-card rounded-2xl overflow-hidden shadow-xl border border-border hover:shadow-2xl transition-all duration-300 group flex flex-col h-full"
             >
               {/* Video Thumbnail */}
               <div className="relative aspect-square overflow-hidden">
@@ -570,19 +549,19 @@ export const VideoShowcase = () => {
                   {/* Light overlay with centered play button - always visible */}
                   <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px] flex items-center justify-center">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/20">
-                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 ml-1" fill="currentColor" />
+                      <Play className="w-6 h-6 sm:w-8 sm:h-8 text-foreground ml-1" fill="currentColor" />
                     </div>
                   </div>
 
                   {/* Enhanced hover overlay */}
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <motion.div 
-                      className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-pink-200"
+                      className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-border"
                       whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
                       whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     >
-                      <Play className="w-8 h-8 sm:w-10 sm:h-10 text-pink-500 ml-1" fill="currentColor" />
+                      <Play className="w-8 h-8 sm:w-10 sm:h-10 text-foreground ml-1" fill="currentColor" />
                     </motion.div>
                   </div>
 
@@ -595,7 +574,7 @@ export const VideoShowcase = () => {
                 {/* Title and Description Section - Fixed Heights */}
                 <div className="mb-4">
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 leading-tight min-h-[3rem]">{video.title}</h3>
-                  <p className="text-pink-600 font-medium mb-3 text-sm sm:text-base min-h-[1.5rem]">{video.subtitle}</p>
+                  <p className="text-muted-foreground font-medium mb-3 text-sm sm:text-base min-h-[1.5rem]">{video.subtitle}</p>
                   <p className="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed">{video.description}</p>
                 </div>
                 
@@ -607,7 +586,7 @@ export const VideoShowcase = () => {
                     <ul className="space-y-2">
                       {video.highlights.slice(0, 3).map((highlight, index) => (
                         <li key={index} className="flex items-start gap-2 text-sm">
-                          <Sparkles className="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" />
+                          <Sparkles className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" />
                           <span className="text-gray-700 leading-relaxed">{highlight}</span>
                         </li>
                       ))}
@@ -619,10 +598,10 @@ export const VideoShowcase = () => {
                 
                 <motion.button
                   onClick={() => handleBookNow(video.technique, video.title)}
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 sm:py-4 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation text-sm sm:text-base cursor-pointer mt-auto"
+                  className="w-full bg-primary text-primary-foreground py-3 sm:py-4 px-6 rounded-md font-medium transition-colors duration-200 touch-manipulation text-sm sm:text-base cursor-pointer mt-auto hover:bg-[#1a1a1a]"
                   whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                   whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
-                  style={{ minHeight: '44px' }} // WCAG touch target size
+                  style={{ minHeight: '44px' }}
                 >
                   <span className="flex items-center justify-center gap-2">
                     Book This Style

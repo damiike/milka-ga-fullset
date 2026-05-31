@@ -1,282 +1,131 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useSpring, animated } from '@react-spring/web';
-import { Sparkles, Star, Phone } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { MapPin, Phone, Star, Clock } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
-import { bookingConfig, generateBookingUrl } from '../../config/booking';
+import { generateBookingUrl } from '../../config/booking';
 
 export function LuxuryHero() {
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 500], [0, -150]);
   const { triggerConfetti } = useConfetti();
-  
-  // Floating animation for sparkles
-  const sparkleAnimation = useSpring({
-    from: { y: 0 },
-    to: async (next) => {
-      while (true) {
-        await next({ y: -20 });
-        await next({ y: 0 });
-      }
-    },
-    config: { duration: 3000 }
-  });
 
   return (
-    <section className="relative h-screen sm:min-h-screen overflow-hidden sm:premium-gradient">
-      {/* Mobile background - solid color, fully contained */}
-      <div className="absolute inset-0 sm:hidden bg-gradient-to-b from-pink-50 to-white"></div>
-      {/* Static gradient background - Desktop only */}
-      <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-primary/30 to-transparent hidden sm:block" />
-      
-      {/* Floating sparkle elements */}
-      <animated.div style={sparkleAnimation} className="absolute top-20 left-10 text-primary opacity-40">
-        <Sparkles size={30} />
-      </animated.div>
-      <animated.div style={{...sparkleAnimation, animationDelay: '1s'}} className="absolute top-40 right-20 text-accent opacity-30">
-        <Sparkles size={24} />
-      </animated.div>
-      <animated.div style={{...sparkleAnimation, animationDelay: '2s'}} className="absolute bottom-40 left-32 text-primary opacity-25">
-        <Sparkles size={20} />
-      </animated.div>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-background border-b border-border">
+      <div className="shrink-0 brand-band text-center text-xs sm:text-sm py-2.5 px-4">
+        <span className="font-medium">Full set lash extensions from $140</span>
+        <span className="hidden sm:inline"> · </span>
+        <span className="block sm:inline mt-0.5 sm:mt-0 text-background/85">
+          Bay Street, Brighton · By appointment
+        </span>
+      </div>
 
-      <div className="relative">
-        <div className="container mx-auto px-6 relative z-10 h-screen sm:min-h-screen flex items-start sm:items-center justify-center py-8 sm:py-24">
-          <motion.div 
-            className="flex flex-col items-center justify-center w-full text-center relative"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-          {/* Logo */}
+      <section className="relative flex-1 flex flex-col overflow-hidden">
+        <div className="container mx-auto px-6 flex-1 flex items-center justify-center py-8 sm:py-12">
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
+            className="relative max-w-3xl mx-auto text-center w-full pb-14 sm:pb-16"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-8 pt-4 sm:pt-0"
+            transition={{ duration: 0.5 }}
           >
-            <img 
-              src={getImageUrl("photos/milka-logo.png")}
-              alt="Milka Collective Logo"
-              className="h-16 md:h-20 mx-auto hero-logo"
-              width="200"
-              height="80"
+            <img
+              src={getImageUrl('photos/milka-logo.png')}
+              alt="Milka Collective"
+              className="hero-logo w-full max-w-[min(100%,160px)] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[280px] h-auto mx-auto mb-6 sm:mb-8"
+              width="694"
+              height="194"
               fetchPriority="high"
               loading="eager"
             />
-          </motion.div>
 
-          {/* Elegant brand introduction */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 100, delay: 0.2 }}
-            className="mb-8"
-          >
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-card/80 backdrop-blur-sm luxury-shadow luxury-border">
-              <Star className="w-4 h-4 text-primary fill-primary" />
-              <span className="text-sm font-medium text-foreground">Brighton's Most Loved Lash Studio</span>
-              <Star className="w-4 h-4 text-primary fill-primary" />
-            </div>
-          </motion.div>
+            <p className="eyebrow mb-3">Brighton&apos;s Most Loved Lash Studio</p>
+            <h1 className="text-foreground mb-4">
+              Wake Up Beautiful Every Day — Without the Mascara
+            </h1>
+            <p className="text-lg text-muted-foreground mb-6 sm:mb-8 max-w-xl mx-auto hidden md:block">
+              Luxurious lash extensions crafted by Brighton&apos;s most experienced artists.
+              Wakeup in your makeup every day.
+            </p>
 
-          {/* Main headline with split text animation */}
-          <div className="mb-6">
-            <motion.h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight">
-              <motion.span
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="block text-foreground"
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6 sm:mb-10">
+              <a
+                href={generateBookingUrl()}
+                onClick={() => {
+                  triggerConfetti();
+                  if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+                    (window as Window & { dataLayer: unknown[] }).dataLayer.push({
+                      event: 'booking_click',
+                      click_type: 'hero_primary',
+                      button_text: 'Book Your Transformation',
+                      service_type: 'full_set',
+                    });
+                  }
+                }}
+                className="btn-luxury-primary"
               >
-                Elevating
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="block text-foreground"
-              >
-                Your Natural Beauty,
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-                className="block font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent"
-              >
-                One Lash at a Time
-              </motion.span>
-            </motion.h1>
-          </div>
-
-          {/* Subheadline - Hidden on mobile */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl font-light hidden md:block"
-          >
-            Wakeup in your makeup every day with luxurious lash extensions 
-            crafted by Brighton's most experienced artists
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-12"
-          >
-            <motion.a
-              href={generateBookingUrl()}
-              onClick={() => {
-                // Trigger confetti animation
-                triggerConfetti();
-                
-                // Enhanced tracking with booking details
-                if (typeof window !== 'undefined' && (window as any).dataLayer) {
-                  (window as any).dataLayer.push({
-                    event: 'booking_click',
-                    click_type: 'hero_primary',
-                    button_text: 'Book Your Transformation',
-                    service_type: 'full_set'
-                  });
-                }
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white font-medium rounded-full overflow-hidden shadow-xl inline-block"
-            >
-              <span className="relative z-10 flex items-center gap-2 text-lg">
                 Book Your Transformation
-                <motion.span
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  →
-                </motion.span>
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.a>
-
-            <motion.a
-              href="tel:0480095789"
-              onClick={() => {
-                // Track phone click with GTM
-                if (typeof window !== 'undefined' && (window as any).dataLayer) {
-                  (window as any).dataLayer.push({
-                    event: 'phone_click',
-                    click_type: 'hero_secondary',
-                    phone_number: '0480095789'
-                  });
-                }
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group px-8 py-4 bg-card/80 backdrop-blur-sm text-foreground font-medium rounded-full luxury-shadow luxury-border flex items-center gap-2"
-            >
-              <Phone className="w-5 h-5" />
-              <span className="text-lg">Call 0480 095 789</span>
-            </motion.a>
-            
-            {/* Scroll indicator - Mobile only, positioned in button group */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-              className="flex justify-center sm:hidden mt-1"
-            >
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center"
+              </a>
+              <a
+                href="tel:0480095789"
+                onClick={() => {
+                  if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
+                    (window as Window & { dataLayer: unknown[] }).dataLayer.push({
+                      event: 'phone_click',
+                      click_type: 'hero_secondary',
+                      phone_number: '0480095789',
+                    });
+                  }
+                }}
+                className="btn-luxury-outline gap-2"
               >
-                <motion.div
-                  animate={{ y: [0, 15, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="w-1 h-3 bg-primary rounded-full mt-2"
-                />
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                <Phone className="w-4 h-4" />
+                Call 0480 095 789
+              </a>
+            </div>
 
-          {/* Trust indicators with animation - Hidden on mobile */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            className="hidden md:flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground pb-6 sm:pb-0"
-          >
-            <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto px-4 sm:px-0">
-              <div className="flex -space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ delay: 1.5 + i * 0.1 }}
-                  >
-                    <Star className="w-5 h-5 text-primary fill-primary" />
-                  </motion.div>
-                ))}
+            <div className="inline-flex flex-col items-center gap-3 border border-border rounded-sm bg-muted/50 px-5 py-4 text-sm max-w-2xl w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-accent fill-accent" />
+                    ))}
+                  </div>
+                  <span className="font-medium text-foreground">105+ Google reviews</span>
+                </div>
+                <span className="hidden sm:block text-border" aria-hidden>
+                  |
+                </span>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <MapPin className="w-4 h-4 shrink-0 text-foreground" strokeWidth={1.5} />
+                  <span>2/229 Bay St, Brighton</span>
+                </div>
               </div>
-              <span className="font-medium text-center sm:text-left">Over 95 5-Star Google Verified Reviews</span>
+              <div className="flex items-center gap-2 text-muted-foreground text-center">
+                <Clock className="w-4 h-4 shrink-0 text-foreground" strokeWidth={1.5} />
+                <span>Mon–Thu 10am–8pm · Fri 10am–5pm · Sat 10am–4pm</span>
+              </div>
             </div>
-            <span className="hidden sm:inline text-primary/30">•</span>
-            <div className="flex flex-col sm:flex-row items-center gap-2 px-4 sm:px-0 w-full sm:w-auto">
-              <span className="text-2xl sm:text-lg">⏰</span>
-              <span className="text-center sm:text-left">
-                <span className="sm:inline">Mon-Thu 10am-8pm •</span>
-                <span className="sm:inline"> Fri 10am-5pm •</span>
-                <span className="sm:inline"> Sat 10am-4pm</span>
-              </span>
-            </div>
-            <span className="hidden sm:inline text-primary/30">•</span>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">📍</span>
-              <span>2/229 Bay St, Brighton</span>
-            </div>
-            </motion.div>
-            
-            {/* Scroll indicator - Desktop only */}
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-              className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 z-10 hidden sm:block"
+              transition={{ delay: 1.2, duration: 0.6 }}
+              className="absolute left-1/2 -translate-x-1/2 top-full mt-6 sm:mt-8 z-10"
+              aria-hidden
             >
               <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center"
+                animate={{ y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+                className="w-6 h-10 border-2 border-border rounded-full flex justify-center"
               >
                 <motion.div
-                  animate={{ y: [0, 15, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="w-1 h-3 bg-primary rounded-full mt-2"
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+                  className="w-1 h-3 bg-foreground/50 rounded-full mt-2"
                 />
               </motion.div>
             </motion.div>
           </motion.div>
         </div>
-      </div>
-
-      {/* Decorative blur circles - Desktop only */}
-      <motion.div
-        style={{ y: parallaxY }}
-        className="absolute -top-40 -right-40 w-96 h-96 bg-primary rounded-full filter blur-3xl opacity-20 hidden sm:block"
-      />
-      <motion.div
-        style={{ y: parallaxY }}
-        className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent rounded-full filter blur-3xl opacity-20 hidden sm:block"
-      />
-    </section>
+      </section>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import TrustInfoBar from '../components/landing/TrustInfoBar.astro';
 
 export interface Props {
   title: string;
@@ -16,44 +17,41 @@ const { title, description, ogImage, variant } = Astro.props;
     <slot />
   </main>
   
-  <!-- Footer -->
-  <footer class="border-t bg-muted/50">
-
+  <footer class="bg-muted border-t border-border">
     <div class="container mx-auto px-6 py-12">
-      <div class="grid gap-8 md:grid-cols-3 items-start">
-        <!-- Brand -->
+      <div class="grid gap-10 md:grid-cols-3 items-start">
         <div>
-          <h3 class="font-bold text-lg mb-3">Milka Collective</h3>
-          <p class="text-sm text-muted-foreground mb-4">
-            Brighton's premier lash extension and beauty salon. Over 95 5-Star Google verified reviews and 1000's of happy clients!
+          <h3 class="font-medium text-base mb-3 text-foreground">Milka Collective</h3>
+          <p class="text-sm text-muted-foreground mb-4 leading-relaxed">
+            Brighton's premier lash extension studio on Bay Street. Over 105 5-star Google verified reviews
+            and hundreds of happy clients.
           </p>
         </div>
         
-        <!-- Contact Info -->
         <div>
-          <h3 class="font-bold text-lg mb-3">Contact Us</h3>
+          <h3 class="font-medium text-base mb-3 text-foreground">Contact</h3>
           <div class="space-y-2 text-sm text-muted-foreground">
-            <p>📍 2/229 Bay St, Brighton VIC 3186</p>
-            <p>📱 <a href="tel:0480095789" class="hover:text-foreground transition">0480095789</a></p>
-            <p>✉️ <a href="mailto:hello@milkacollective.com.au" class="hover:text-foreground transition">hello@milkacollective.com.au</a></p>
+            <p>2/229 Bay St, Brighton VIC 3186</p>
+            <p><a href="tel:0480095789" class="text-foreground hover:underline" onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'phone_click', click_type: 'footer', phone_number: '0480095789' }); }">0480 095 789</a></p>
+            <p><a href="mailto:hello@milkacollective.com.au" class="text-foreground hover:underline" onclick="if (typeof window !== 'undefined' && window.dataLayer) { window.dataLayer.push({ event: 'email_click', click_type: 'footer', email: 'hello@milkacollective.com.au' }); }">hello@milkacollective.com.au</a></p>
           </div>
         </div>
         
-        <!-- Hours -->
         <div>
-          <h3 class="font-bold text-lg mb-3">Opening Hours</h3>
+          <h3 class="font-medium text-base mb-3 text-foreground">Opening Hours</h3>
           <div class="space-y-1 text-sm text-muted-foreground">
-            <p class="flex items-center gap-1">Mon-Thu: 10am-8pm</p>
-            <p>Fri: 10am-5pm</p>
-            <p>Sat: 10am-4pm</p>
+            <p>Mon–Thu: 10am–8pm</p>
+            <p>Fri: 10am–5pm</p>
+            <p>Sat: 10am–4pm</p>
             <p>Sun: Closed</p>
-            <p class="mt-2 font-medium">By Appointment Only</p>
+            <p class="mt-2 font-medium text-foreground">By appointment only</p>
           </div>
         </div>
       </div>
       
-      <div class="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-        <p>&copy; 2025 Milka Collective. All rights reserved.</p>
+      <div class="border-t border-border mt-10 pt-8">
+        <TrustInfoBar />
+        <p class="text-center text-sm text-muted-foreground mt-8">&copy; 2025 Milka Collective. All rights reserved.</p>
       </div>
     </div>
   </footer>

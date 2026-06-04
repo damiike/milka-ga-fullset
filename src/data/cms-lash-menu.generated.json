@@ -1,0 +1,119 @@
+{
+  "generatedAt": "2026-06-04T14:16:57.916Z",
+  "cmsRevision": null,
+  "heroFromPrice": 90,
+  "groups": [
+    {
+      "category": "Classic Lashes",
+      "items": [
+        {
+          "name": "Natural Classic Set",
+          "cmsSlug": "classic-natural-set-lash-extensions-brighton",
+          "price": "$140",
+          "duration": "75 min",
+          "popular": true,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Full Classic Set",
+          "cmsSlug": "classic-full-set-lash-extensions-brighton",
+          "price": "$160",
+          "duration": "120 min",
+          "popular": true,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Half Classic Set",
+          "cmsSlug": "classic-half-set-outer-eye-lash-extensions-brighton",
+          "price": "$90",
+          "duration": "60 min",
+          "popular": true,
+          "source": "fresha.com"
+        }
+      ]
+    },
+    {
+      "category": "Volume Lashes",
+      "items": [
+        {
+          "name": "Full Russian Volume Set",
+          "cmsSlug": "russian-volume-full-set-brighton",
+          "price": "$210",
+          "duration": "120 min",
+          "popular": false,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Russian Volume Natural Set",
+          "cmsSlug": "russian-volume-natural-set-brighton",
+          "price": "$185",
+          "duration": "90 min",
+          "popular": false,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Full Mega Russian Volume Set",
+          "cmsSlug": "mega-russian-volume-full-set-brighton",
+          "price": "$295",
+          "duration": "150 min",
+          "popular": false,
+          "source": "fresha.com"
+        }
+      ]
+    },
+    {
+      "category": "Specialty Sets",
+      "items": [
+        {
+          "name": "Wet Look Full Set",
+          "cmsSlug": "wet-look-full-set-lash-extensions-brighton",
+          "price": "$180",
+          "duration": "120 min",
+          "popular": true,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Full Hybrid Set",
+          "cmsSlug": "hybrid-full-set-lash-extensions-brighton",
+          "price": "$185",
+          "duration": "120 min",
+          "popular": true,
+          "source": "fresha.com"
+        }
+      ]
+    },
+    {
+      "category": "Add-Ons",
+      "items": [
+        {
+          "name": "Bottom Lashes Add-On",
+          "cmsSlug": "bottom-lashes-add-on-brighton",
+          "price": "$60",
+          "duration": "30 min",
+          "popular": false,
+          "source": "fresha.com"
+        },
+        {
+          "name": "Wispy Add-On",
+          "cmsSlug": "wispy-add-on-brighton",
+          "price": "$20",
+          "duration": "15 min",
+          "popular": false,
+          "source": "fresha.com"
+        }
+      ]
+    }
+  ],
+  "googleReviews": {
+    "count": 109,
+    "countPlus": "109+",
+    "overVerifiedLabel": "Over 109 5-Star Google Verified Reviews",
+    "countPlusFiveStarLabel": "109+ Five-star Google reviews",
+    "trustedByHeading": "Trusted by 109+ Brighton Clients",
+    "whyChooseTitle": "Over 109 5-Star Google Reviews",
+    "whyChooseFoot": "Join 109+ five-star Google clients who trust us with their lash transformations.",
+    "shortHeroLabel": "109+ Google reviews",
+    "reviewsSyncedAt": "2026-06-04T14:16:57.597Z",
+    "reviewsSource": "giveme5-api"
+  }
+}

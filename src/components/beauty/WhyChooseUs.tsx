@@ -1,5 +1,6 @@
 import { Award, Heart, Shield, Sparkles, Clock, MapPin } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { LP_GOOGLE_REVIEW_TRUST } from '../../data/lp-trust-copy';
 
 const reasons: {
   icon: LucideIcon;
@@ -13,7 +14,7 @@ const reasons: {
   },
   {
     icon: Heart,
-    title: 'Over 105 5-Star Google Reviews',
+    title: LP_GOOGLE_REVIEW_TRUST.whyChooseTitle,
     description: 'Google verified reviews from happy clients with consistently exceptional results',
   },
   {

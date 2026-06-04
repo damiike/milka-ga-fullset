@@ -3,104 +3,10 @@ import { useState } from 'react';
 import { Clock, DollarSign } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { generateBookingUrl } from '../../config/booking';
+import { LP_SERVICE_GROUPS } from '../../data/lp-service-menu';
+import { captureLpBookNow } from '../../lib/lp-booking-analytics';
 
-interface Service {
-  category: string;
-  items: {
-    name: string;
-    price: string;
-    duration: string;
-    description: string;
-    popular?: boolean;
-  }[];
-}
-
-const services: Service[] = [
-  {
-    category: "Classic Lashes",
-    items: [
-      {
-        name: "Natural Classic Set",
-        price: "$140",
-        duration: "75 min",
-        description: "One extension per natural lash for an elegant, natural enhancement"
-      },
-      {
-        name: "Full Classic Set",
-        price: "$160",
-        duration: "120 min",
-        description: "Maximum length and fullness while maintaining a natural look",
-        popular: true
-      },
-      {
-        name: "Half Classic Set",
-        price: "$90",
-        duration: "60 min",
-        description: "Outer eye only — perfect for first-timers or a subtle enhancement"
-      }
-    ]
-  },
-  {
-    category: "Volume Lashes",
-    items: [
-      {
-        name: "Full Russian Volume Set",
-        price: "$210",
-        duration: "120 min",
-        description: "Dramatic volume with 4-6 ultra-fine extensions per lash",
-        popular: true
-      },
-      {
-        name: "Russian Volume Natural Set",
-        price: "$185",
-        duration: "90 min",
-        description: "Soft, fluffy lashes with 2-3 extensions per natural lash"
-      },
-      {
-        name: "Full Mega Russian Volume Set",
-        price: "$295",
-        duration: "150 min",
-        description: "Maximum drama with 6-10 extensions for show-stopping lashes"
-      }
-    ]
-  },
-  {
-    category: "Specialty Sets",
-    items: [
-      {
-        name: "Wet Look Full Set",
-        price: "$180",
-        duration: "120 min",
-        description: "Glossy, just-out-of-the-shower lash look that's trending"
-      },
-      {
-        name: "Full Hybrid Set",
-        price: "$185",
-        duration: "120 min",
-        description: "Perfect blend of classic and volume for textured fullness",
-        popular: true
-      }
-    ]
-  },
-  {
-    category: "Add-Ons",
-    items: [
-      {
-        name: "Bottom Lashes Add-On",
-        price: "$60",
-        duration: "+30 min",
-        description: "Complete your look with lower lash extensions"
-      },
-      {
-        name: "Wispy Add-On",
-        price: "$20",
-        duration: "+15 min",
-        description: "Add texture and movement to any set",
-        popular: true
-      }
-    ]
-  }
-];
+const services = LP_SERVICE_GROUPS;
 
 export function ServiceShowcase() {
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -201,9 +107,9 @@ export function ServiceShowcase() {
                       href={generateBookingUrl()}
                       onClick={() => {
                         triggerConfetti();
-                        if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
-                          (window as Window & { dataLayer: unknown[] }).dataLayer.push({
-                            event: 'booking_click',
+                        const ph = (window as Window & { posthog?: { capture: (e: string, p?: Record<string, unknown>) => void } }).posthog;
+                        if (ph) {
+                          captureLpBookNow(ph, {
                             click_type: 'service_card',
                             button_text: 'Book This Service',
                             service_name: item.name,
@@ -239,9 +145,9 @@ export function ServiceShowcase() {
             href={generateBookingUrl()}
             onClick={() => {
               triggerConfetti();
-              if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
-                (window as Window & { dataLayer: unknown[] }).dataLayer.push({
-                  event: 'booking_click',
+              const ph = (window as Window & { posthog?: { capture: (e: string, p?: Record<string, unknown>) => void } }).posthog;
+              if (ph) {
+                captureLpBookNow(ph, {
                   click_type: 'service_menu_link',
                   button_text: 'View Full Service Menu',
                 });

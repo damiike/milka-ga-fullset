@@ -3,6 +3,7 @@ import { Star, Quote } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import type { CarouselTestimonial } from '../../lib/reviews';
 import { fallbackCarouselTestimonials } from '../../lib/reviews';
+import { LP_GOOGLE_REVIEW_TRUST } from '../../data/lp-trust-copy';
 
 interface LuxuryTestimonialsProps {
   testimonials?: CarouselTestimonial[];
@@ -62,7 +63,7 @@ export function LuxuryTestimonials({
           className="text-center mb-16"
         >
           <p className="eyebrow mb-4">Client Love</p>
-          <h2 className="text-foreground mb-4">Trusted by 105+ Brighton Clients</h2>
+          <h2 className="text-foreground mb-4">{LP_GOOGLE_REVIEW_TRUST.trustedByHeading}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Latest 5-star Google reviews from clients who love their lash transformations at our Brighton studio.
           </p>
@@ -161,7 +162,7 @@ export function LuxuryTestimonials({
               ))}
             </div>
             <span className="text-foreground font-medium tracking-wide">
-              Over 105 5-Star Google Verified Reviews
+              {LP_GOOGLE_REVIEW_TRUST.overVerifiedLabel}
             </span>
           </div>
         </motion.div>

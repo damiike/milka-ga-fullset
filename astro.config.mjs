@@ -4,8 +4,19 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import compression from 'vite-plugin-compression';
 
+// Subpath build for milkacollective.com.au/lp/full-lash-set/ (MILKA_LP_BASE=/lp/full-lash-set).
+// Default build (no env) keeps root paths for lp.milkacollective.com.au.
+const lpBaseRaw = process.env.MILKA_LP_BASE?.trim() || '';
+const base =
+  lpBaseRaw && lpBaseRaw !== '/'
+    ? lpBaseRaw.endsWith('/')
+      ? lpBaseRaw
+      : `${lpBaseRaw}/`
+    : undefined;
+
 // https://astro.build/config
 export default defineConfig({
+  ...(base ? { base } : {}),
   output: 'static',
   integrations: [react()],
   vite: {

@@ -3,6 +3,9 @@ import { MapPin, Phone, Star, Clock } from 'lucide-react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { getImageUrl } from '../../config/assets';
 import { generateBookingUrl } from '../../config/booking';
+import { LP_HERO_FROM_PRICE } from '../../data/lp-service-menu';
+import { LP_GOOGLE_REVIEW_TRUST } from '../../data/lp-trust-copy';
+import { captureLpBookNow, captureLpPhoneClick } from '../../lib/lp-booking-analytics';
 
 export function LuxuryHero() {
   const { triggerConfetti } = useConfetti();
@@ -10,7 +13,7 @@ export function LuxuryHero() {
   return (
     <div className="flex flex-col bg-background border-b border-border max-sm:min-h-0 sm:min-h-screen sm:min-h-[100dvh]">
       <div className="shrink-0 brand-band text-center text-xs sm:text-sm py-2 sm:py-2.5 px-4">
-        <span className="font-medium">Full set lash extensions from $140</span>
+        <span className="font-medium">Full set lash extensions from ${LP_HERO_FROM_PRICE}</span>
         <span className="hidden sm:inline"> · </span>
         <span className="block sm:inline mt-0.5 sm:mt-0 text-background/85">
           Bay Street, Brighton · By appointment
@@ -51,9 +54,9 @@ export function LuxuryHero() {
                 href={generateBookingUrl()}
                 onClick={() => {
                   triggerConfetti();
-                  if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
-                    (window as Window & { dataLayer: unknown[] }).dataLayer.push({
-                      event: 'booking_click',
+                  const ph = (window as Window & { posthog?: { capture: (e: string, p?: Record<string, unknown>) => void } }).posthog;
+                  if (ph) {
+                    captureLpBookNow(ph, {
                       click_type: 'hero_primary',
                       button_text: 'Book Your Transformation',
                       service_type: 'full_set',
@@ -67,13 +70,10 @@ export function LuxuryHero() {
               <a
                 href="tel:0480095789"
                 onClick={() => {
-                  if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
-                    (window as Window & { dataLayer: unknown[] }).dataLayer.push({
-                      event: 'phone_click',
-                      click_type: 'hero_secondary',
-                      phone_number: '0480095789',
-                    });
-                  }
+                  captureLpPhoneClick({
+                    click_type: 'hero_secondary',
+                    phone_number: '0480095789',
+                  });
                 }}
                 className="btn-luxury-outline gap-2"
               >
@@ -90,7 +90,7 @@ export function LuxuryHero() {
                       <Star key={i} className="w-4 h-4 text-accent fill-accent" />
                     ))}
                   </div>
-                  <span className="font-medium text-foreground">105+ Google reviews</span>
+                  <span className="font-medium text-foreground">{LP_GOOGLE_REVIEW_TRUST.shortHeroLabel}</span>
                 </div>
                 <span className="hidden sm:block text-border" aria-hidden>
                   |

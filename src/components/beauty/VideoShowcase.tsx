@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { getImageUrl } from '../../config/assets';
 import { useConfetti } from '../../hooks/useConfetti';
 import { bookingConfig, generateBookingUrl } from '../../config/booking';
+import { captureLpBookNow } from '../../lib/lp-booking-analytics';
 
 interface VideoItem {
   id: number;
@@ -453,39 +454,17 @@ export const VideoShowcase = () => {
     // Trigger confetti animation
     triggerConfetti();
     
-    // Enhanced GTM tracking
-    if (typeof window !== 'undefined' && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
-        event: 'booking_click',
+    if (typeof window !== 'undefined' && (window as any).posthog) {
+      captureLpBookNow((window as any).posthog, {
         click_type: 'video_showcase',
         video_technique: technique,
         video_title: videoTitle,
         button_text: 'Book This Style',
         source_section: 'video_showcase',
+        conversion_type: 'booking_intent',
         event_category: 'Conversion',
         event_action: 'Booking Click',
         event_label: `${technique} - ${videoTitle}`,
-        conversion_type: 'booking_intent'
-      });
-    }
-
-    // Enhanced PostHog tracking
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture('booking_click', {
-        click_type: 'video_showcase',
-        video_technique: technique,
-        video_title: videoTitle,
-        button_text: 'Book This Style',
-        source_section: 'video_showcase',
-        conversion_type: 'booking_intent'
-      });
-
-      // Also track as conversion
-      (window as any).posthog.capture('conversion', {
-        conversion_type: 'booking_click',
-        source: 'video_showcase',
-        technique: technique,
-        video_title: videoTitle
       });
     }
     

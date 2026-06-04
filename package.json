@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:lp": "MILKA_LP_BASE=/lp/full-lash-set astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

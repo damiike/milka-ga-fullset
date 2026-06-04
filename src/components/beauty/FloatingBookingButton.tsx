@@ -3,6 +3,7 @@ import { Calendar, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useConfetti } from '../../hooks/useConfetti';
 import { generateBookingUrl } from '../../config/booking';
+import { captureLpBookNow } from '../../lib/lp-booking-analytics';
 
 export function FloatingBookingButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,20 +22,13 @@ export function FloatingBookingButton() {
   const handleBookingClick = () => {
     triggerConfetti();
 
-    if (typeof window !== 'undefined' && (window as Window & { dataLayer?: unknown[] }).dataLayer) {
-      (window as Window & { dataLayer: unknown[] }).dataLayer.push({
-        event: 'booking_click',
+    const ph = (window as Window & { posthog?: { capture: (event: string, props: Record<string, unknown>) => void } }).posthog;
+    if (ph) {
+      captureLpBookNow(ph, {
         click_type: 'floating_button',
         scroll_position: window.scrollY,
         expanded: isExpanded,
         service_type: 'full_set',
-      });
-    }
-
-    if (typeof window !== 'undefined' && (window as Window & { posthog?: { capture: (event: string, props: Record<string, unknown>) => void } }).posthog) {
-      (window as Window & { posthog: { capture: (event: string, props: Record<string, unknown>) => void } }).posthog.capture('floating_booking_click', {
-        scroll_position: window.scrollY,
-        expanded: isExpanded,
       });
     }
 

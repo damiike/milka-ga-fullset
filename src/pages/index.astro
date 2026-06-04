@@ -12,6 +12,7 @@ import { FAQ } from '../components/beauty/FAQ';
 import { landingConfigs } from '../data/landing-configs';
 import { bookingConfig, generateBookingUrl } from '../config/booking';
 import type { Review } from '../lib/reviews';
+import { LP_GOOGLE_REVIEW_TRUST } from '../data/lp-trust-copy';
 import {
   normalizeApiReview,
   selectCarouselReviews,
@@ -130,7 +131,7 @@ function generateStars(rating: number): string {
           <div class="space-y-3 text-sm text-muted-foreground">
             <div class="flex items-center justify-center gap-2">
               <span class="text-lg">⭐</span>
-              <span class="font-medium text-foreground">Over 105 5-Star Google Verified Reviews</span>
+              <span class="font-medium text-foreground">{LP_GOOGLE_REVIEW_TRUST.overVerifiedLabel}</span>
             </div>
             
             <div class="border-t border-border pt-3">
